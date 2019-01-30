@@ -1,0 +1,74 @@
+<div *ngIf="listOfParams">
+    
+
+    <ul class="treeview" id="tree-physical-params">
+        <li>
+            <span *ngIf="listOfParams.length == 0">
+                No physical parameters found for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+            </span>                        
+            <span *ngIf="listOfParams.length == 1">
+                Found 1 physical parameter for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+            </span>                        
+            <span *ngIf="listOfParams.length > 1">
+                Found {{listOfParams.length}} physical parameters for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+            </span>  
+        
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Parameter Name</th>
+                            <th>Description</th>
+                            <th>Value</th>
+                            <th>Lower Bound</th>
+                            <th>Upper Bound</th>
+                            <th>Unit</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let param of listOfParams; let i = index">
+                            <tr>
+                                <td>{{param.name}}</td>
+                                <td>{{param.description}}</td>
+                                <td *ngIf="!editing">{{param.defaultValue}}</td>
+                                <td *ngIf="editing">
+                                    <input type="text" ng-model="editValue" name="input" required 
+                                    style="width: 50px" [value]="editValue" (input)="editValue = $event.target.value" />
+                                    <button (click) = "confirmEdit()" class="btn btn-success" [disabled]="!editValue">Confirm</button>
+                                    <button (click) = "cancelEdit()" class="btn btn-danger">Cancel</button>
+                                </td>
+                                <td>{{param.lowerBound}}</td>
+                                <td>{{param.upperBound}}</td>
+                                <td>{{param.unit}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                        (click)="editParamValue(param)"
+                                        *ngIf="!editing">
+                                        Edit Value
+                                    </button>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div id="rampUpWarningMessage" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-body">
+        <p>You need to be in RampUp before you can edit this value</p>
+        
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-danger" data-dismiss="modal">
+              OK
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div >
+    <div *ngIf="recommendations; else noData">
+        <ul class="treeview">
+            <li>
+                <h3 >SYSTEM RECOMMENDATIONS</h3>
+
+                <div id="recommendation-counter-label">
+                    <span *ngIf="recommendations.length == 0">
+                        No recommendations found.
+                    </span>                        
+                    <span *ngIf="recommendations.length == 1">
+                        Found 1 recommendation.
+                    </span>                        
+                    <span *ngIf="recommendations.length > 1">
+                        Found {{recommendations.length}} recommendations.
+                    </span>  
+                    <!-- span class="glyphicon glyphicon-list-alt"
+                        data-toggle="tooltip"
+                        title="Go to full list"
+                        (click)="goToFullList()"
+                        ></span -->
+                </div>
+
+                <div class="table-responsive">
+                    <table *ngIf="recommendations.length > 0" 
+                        class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <!-- <th>SKILL ID</th> -->
+                                <th>UNIQUE ID</th>
+                                <th>TIMESTAMP</th>
+                                <th>USER MESSAGE</th>
+                                <th>PROCESSED</th>     
+                                <th>DISCARDED</th>        
+                                <th>SUBSYSTEM</th>                   
+                                <th>RAMPUP NEEDED</th>
+                                <th>NEXT ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let recommendation of recommendations; let i = index">
+                                <!-- <td>{{skill.uniqueId}}</td> -->
+                                <td>{{recommendation.uniqueId}}</td>
+                                <td>{{recommendation.registered | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{recommendation.message}}
+                                </td>
+                                <td>
+                                    <!-- button class="btn btn-primary btn-sm"
+                                        (click)="goToRecommendationDetails(recommendation)">
+                                        Recommendation details
+                                    </button -->
+                                    <span *ngIf="recommendation.processed == true">
+                                        already processed
+                                    </span>
+                                    <span *ngIf="recommendation.processed == false">
+                                        to be processed
+                                    </span>
+                                </td>                            
+                                <td>
+                                    <!-- button class="btn btn-primary btn-sm"
+                                        (click)="goToRecommendationDetails(recommendation)">
+                                        Recommendation details
+                                    </button -->
+                                    <span *ngIf="recommendation.discarded == true">
+                                        discarded
+                                    </span>
+                                    <span *ngIf="recommendation.discarded == false">
+                                        still valid
+                                    </span>
+                                </td>     
+                                <td>{{recommendation.subSystemName}}</td>
+                                <td>                                    
+                                    <span *ngIf="recommendation.isInRampup == true">                                            
+                                    </span>
+                                    <span *ngIf="recommendation.isInRampup == false">
+                                            Before you proceed, please switch the subsystem stage to "Ramp Up"
+                                    </span>    
+                                </td>
+                                <td>
+                                    <span *ngIf="recommendation.nextActionType == 'new_physical_adjustment'">
+                                        go to new physical adjustment
+                                    </span>
+                                    <span *ngIf="recommendation.nextActionType == 'new_process_adjustment'">
+                                            go to new process adjustment
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<ng-template #noData>No recommendations found<!-- for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}--></ng-template>

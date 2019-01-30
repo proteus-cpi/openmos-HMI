@@ -1,0 +1,389 @@
+<div class="alert alert-info"
+    id="execution-table-info">
+    I.B: Insert line before<br/> 
+    I.A: Insert line after<br/>
+    RM: Remove line<br/>
+    DUP: Duplicate line
+</div>
+<div *ngIf="executionTable; else noData">
+    <div id="execution-table-title">
+        <span *ngIf="subSystemNameToPrint" [ngClass]="{'full-title': !showLinkPage}">
+            Execution Table of {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+        </span>
+
+        <span *ngIf="showLinkPage"
+            class="glyphicon glyphicon-list-alt"
+            data-toggle="tooltip"
+            title="Go to full Execution Table page"
+            (click)="goToFullPage()"
+            ></span>
+    </div>
+    
+    <div class="table-responsive">
+        <span class="execution-table-info">
+            <a class="glyphicon glyphicon-info-sign"
+                onclick="prova(this)">
+            </a>
+        </span>
+        <table class="table table-hover table-execution table-bordered">
+            <!-- caption>EXECUTION TABLE</caption -->
+            <thead>
+                <tr>
+                    <th>INDEX</th>
+                    <th>PRODUCT</th>
+                    <th>RECIPE</th>
+                    <th>NEXT RECIPE</th>
+                    <!--th>POSSIBLE RECIPE CHOICES</th-->
+                    <th class="test"
+                        title="Insert line before">
+                        I.B.
+                    </th>
+                    <th class="test"
+                        title="Insert line after">
+                        I.A.
+                    </th>
+                    <th class="test"
+                        title="Delete line">
+                        RM
+                    </th>
+                    <th class="test"
+                        title="Duplicate line">
+                        DUP
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- oncontextmenu="highlightRow(this);" -->
+                <tr *ngFor="let row of executionTable.rows; let i = index"              
+                    (dblclick)="startEditing();"
+                    [contextMenu]="basicMenu" 
+                    [contextMenuSubject]="i">
+                    <td>
+                        {{i+1}}
+                    </td>
+                    <td>                       
+                        <span *ngIf="!isEditing && !row.productDetailObject && !row.productInstanceDetailObject">
+                            {{row.productId}}
+                        </span>
+                        <span *ngIf="!isEditing && row.productDetailObject" class="data-rel-cont">
+                            <a (click)="goToProductDetail(row.productId)">
+                                {{row.productDetailObject.name}}
+                            </a>
+                            <div class="detail-div">
+                                <object-pretty-printer
+                                    *ngIf="!isEditing"
+                                    [objectToPrint]="row.productDetailObject"
+                                    [objectIdentifier]="row.productId">
+                                </object-pretty-printer>
+                            </div>
+                        </span>
+                        <span *ngIf="!isEditing && row.productInstanceDetailObject" class="data-rel-cont">
+                            <a (click)="goToOrderDetail(row.productInstanceDetailObject.orderId)">
+                                <span *ngIf="row.productInstanceDetailObject.name">
+                                    {{row.productInstanceDetailObject.name}} - </span> 
+                                    {{row.productInstanceDetailObject.uniqueId}} 
+                            </a>
+                            <div class="detail-div">
+                                <object-pretty-printer
+                                    *ngIf="!isEditing"
+                                    [objectToPrint]="row.productInstanceDetailObject"
+                                    [objectIdentifier]="row.productId">
+                                </object-pretty-printer>
+                            </div>
+                        </span>
+
+                        <!-- <input *ngIf="isEditing" [(ngModel)]="row.productId"> -->
+                        <select [(ngModel)]="row.productId" 
+                            *ngIf="isEditing"
+                            class="form-control">
+                            <option *ngFor="let product of avaibleProducts"
+                                [ngValue]="product.uniqueId" >
+                                {{product.name}}
+                            </option>
+                            <option *ngFor="let product of avaibleProductsInstances"
+                                [ngValue]="product.uniqueId" >
+                                <span *ngIf="product.name">{{product.name}} - </span>{{product.uniqueId}}
+                            </option>
+                        </select>
+                    </td>
+
+                    <td>       
+                        <span *ngIf="!isEditing && !row.recipeDetailObject">
+                            {{row.recipeId}}
+                        </span>            
+                        <span *ngIf="!isEditing && row.recipeDetailObject" class="data-rel-cont">   
+                            <a (click)="goToRecipeDetails(row.recipeId)">
+                                {{row.recipeDetailObject.name}}
+                            </a>
+                            <div class="detail-div">
+                                <object-pretty-printer
+                                    *ngIf="!isEditing"
+                                    [objectToPrint]="row.recipeDetailObject"
+                                    [objectIdentifier]="row.recipeId">
+                                </object-pretty-printer>
+                            </div>
+                        </span>
+                        <!-- <input *ngIf="isEditing && avaibleRecepies.length == 0" 
+                            [(ngModel)]="row.recipeId"
+                            class="form-control"> -->
+                        <span *ngIf="isEditing && avaibleRecepies.length == 0">
+                            No recipe available
+                        </span>
+                        <select *ngIf="isEditing && avaibleRecepies.length > 0" 
+                            [(ngModel)]="row.recipeId"
+                            class="form-control"
+                            (ngModelChange)="row.onChangeRecipeId($event)">
+                            <option *ngFor="let recipe of avaibleRecepies"
+                                [ngValue]="recipe.uniqueId">
+                                {{recipe.name}}
+                            </option>
+                        </select>
+                    </td>
+
+                    <td class="next-recipe-td">
+                        <span *ngIf="!isEditing && row.nextRecipeObject" class="data-rel-cont">   
+                            <a (click)="goToRecipeDetails(row.nextRecipeId)">
+                                {{row.nextRecipeObject.name}}
+                            </a>
+                            <div class="detail-div">
+                                <object-pretty-printer
+                                    *ngIf="!isEditing"
+                                    [objectToPrint]="row.nextRecipeObject"
+                                    [objectIdentifier]="row.nextRecipeId">
+                                </object-pretty-printer>
+                            </div>
+                        </span>
+
+                        <!-- span *ngIf="!isEditing && row.nextRecipeObject">
+                            {{row.nextRecipeObject.name}}
+                        </span -->
+
+                        <span *ngIf="!isEditing && !row.nextRecipeObject">
+                            <!-- {{row.nextRecipeIdPath}} -->
+                            {{row.nextRecipeId}}
+                        </span>
+                        <!-- <input *ngIf="isEditing && avaibleRecepies.length == 0" 
+                            [(ngModel)]="row.nextRecipeId"
+                            class="form-control"> -->
+                        <span *ngIf="isEditing && row.avaibleNextRecipe.length == 0">
+                            No recipe available
+                        </span>
+<!--                        [(ngModel)]="row.nextRecipeIdPath" -->
+                        <select *ngIf="isEditing && row.avaibleNextRecipe.length > 0" 
+                            (ngModelChange)="row.onChangeNextRecipeId($event)"
+                            [(ngModel)]="row.nextRecipeId"
+                            class="form-control">
+                            <option *ngFor="let recipe of row.avaibleNextRecipe; let i = index"
+                                [ngValue]="recipe.uniqueId">
+                                {{recipe.name}}
+                            </option>
+                        </select>
+                    </td>
+                    
+                    <!--td>
+                        <span *ngIf="!isEditing">{{row.possibleRecipeChoices}}</span>
+                        <input *ngIf="isEditing" 
+                            [(ngModel)]="row.possibleRecipeChoices"
+                            disabled="false">
+                    </td-->
+
+                    <td class="test"
+                        (click)="addNewRow(i, true)">
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    </td>
+
+                    <td class="test" (click)="addNewRow(i + 1, false)">
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    </td>
+
+                    <td class="test" (click)="deleteRow(i)">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </td>
+
+                    <td class="test" (click)="duplicateLine(i)">
+                        <span class="glyphicon glyphicon-duplicate"></span>
+                    </td>
+                </tr>
+                <tr *ngIf="executionTable.rows.length == 0">
+                    <td colspan="4">
+                        No rows in this execution table
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>  
+
+    <accept-condition *ngIf="isEditing"></accept-condition>
+    
+    <button *ngIf="executionTable.rows.length == 0   && subSystemStageInRampup"
+        class="btn btn-primary"
+        (click)="addNewRow(0, true)">
+        Add Row
+    </button>
+    
+    <button *ngIf="!isEditing && executionTable.rows.length > 0  && subSystemStageInRampup "
+        (click)="startEditing()" 
+        class="btn btn-primary">
+        Modify...
+    </button>
+    
+    <div class="confirm-div-button"
+        id="confirm-div"
+        title="Accept Conditions"
+        data-toggle="tooltip">
+        <button *ngIf="isEditing"
+            disabled
+            (click)="saveModifications()" 
+            class="btn btn-success"
+            button-type="confirm">
+            Save
+        </button>
+    </div>
+    <button *ngIf="isEditing"
+        (click)="discardModifications()" 
+        class="btn btn-danger">
+        Cancel
+    </button>
+    
+</div>
+<ng-template #noData>Execution table not found</ng-template>
+
+
+
+<div *ngIf="addRow" class="row-context-action">
+    <h3>NEW ROW INSERT</h3>
+    <span><strong>ROW POSITION:</strong> {{newRowIndex + 1}}</span>
+    <div class="form-group">
+        <label for="prod-id">PRODUCT ID</label>
+        <select id="prod-id" 
+            class="form-control"
+            [(ngModel)]="executionTableRowHelper.row.productId">
+            <option *ngFor="let product of avaibleProducts"
+                [ngValue]="product.uniqueId">
+                {{product.uniqueId}} - {{product.name}}
+            </option>
+            <option *ngFor="let product of avaibleProductsInstances"
+                [ngValue]="product.uniqueId" >
+                <span *ngIf="product.name">{{product.name}} - </span>{{product.uniqueId}}
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="recipe-id">RECIPE ID</label>
+        <!-- <input *ngIf="avaibleRecepies.length == 0" 
+            type="text" 
+            class="form-control" 
+            id="recipe-id" 
+            [(ngModel)]="executionTableRowHelper.row.recipeId"> -->
+        <span *ngIf="avaibleRecepies.length == 0">
+            No recipe available
+        </span>
+        
+        <select *ngIf="avaibleRecepies.length > 0" 
+            id="recipe-id"
+            class="form-control"
+            [(ngModel)]="executionTableRowHelper.row.recipeId"
+            (ngModelChange)="executionTableRowHelper.row.onInsertNewRow($event)">
+            <option *ngFor="let recipe of avaibleRecepies"
+                [ngValue]="recipe.uniqueId">
+                <!-- (ngModelChange)="row.onChangeRecipeId($event)" -->
+                {{recipe.uniqueId}} - {{recipe.name}}
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="n-recipe-id">NEXT RECIPE ID</label>
+        <!-- <input *ngIf="avaibleRecepies.length == 0"
+            class="form-control" 
+            id="n-recipe-id" 
+            [(ngModel)]="executionTableRowHelper.row.nextRecipeId"/> -->
+        <span *ngIf="avaibleRecepies.length == 0">
+            No recipes available
+        </span>
+        
+        <select *ngIf="avaibleRecepies.length > 0" 
+            id="n-recipe-id"
+            class="form-control"
+            [(ngModel)]="executionTableRowHelper.row.nextRecipeId"
+            [disabled]="executionTableRowHelper.row.recipeId.length <= 0">
+            <option *ngFor="let recipe of executionTableRowHelper.row.avaibleNextRecipe"
+                [ngValue]="recipe.uniqueId">
+                {{recipe.uniqueId}} - {{recipe.name}}
+            </option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <strong>POSSIBLE RECIPE CHOICES</strong>
+        <div class="form-group">
+            <input class="form-control" 
+                disabled="true" 
+                type="text" 
+                [(ngModel)]="executionTableRowHelper.row.possibleRecipeChoices"/>
+            <!--<div class="input-group-btn"> 
+                <div class="confirm-div-button"
+                    title="Accept conditions"
+                    id="confirm-div"
+                    data-toggle="confirm-div">
+                    <button type="button" 
+                        class="btn btn-default" 
+                        (click)="insertNewRow()"
+                        disabled
+                        id="insert-button"
+                        button-type="confirm">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-default" 
+                    (click)="stopInsertNewRow()">
+                    <span class="glyphicon glyphicon-minus"></span>
+                </button>
+
+            </div> --> 
+        </div>
+    </div>
+    <accept-condition></accept-condition>
+    
+    <div class="confirm-div-button"
+        title="Accept conditions"
+        id="confirm-div"
+        data-toggle="tooltip">
+        <button type="button"
+        onclick="checkNewExecutionTableRow(this)"
+        disabled
+                button-type="confirm"
+                class="btn btn-success"
+                (click)="checkAndInsertRow()"
+                >
+                Insert
+            </button>
+    </div> 
+    <span id="error-span" style="display: none"
+        onshow="$('#test2').toggleClass('prova2');">
+        <label class="label label-danger">Complete all the fields</label>
+        <br/>
+    </span>
+    <button id="cancel-row-insert" class="btn btn-danger"
+        (click)="stopInsertNewRow()">
+        Cancel
+    </button>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+</div>
+
+<context-menu style="display: none;">
+    <ng-template contextMenuItem (execute)="addNewRow($event.item, true)">
+        Add row above
+    </ng-template>
+    <ng-template contextMenuItem (execute)="addNewRow($event.item + 1, false)">
+        Add row belove
+    </ng-template>
+    <ng-template contextMenuItem (execute)="duplicateLine($event.item)">
+        Duplicate this line
+    </ng-template>
+    <ng-template contextMenuItem (execute)="deleteRow($event.item)">
+        Delete row
+    </ng-template>
+</context-menu>

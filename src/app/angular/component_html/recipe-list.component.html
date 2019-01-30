@@ -1,0 +1,367 @@
+<!-- 
+    First div: show recipe if user is coming from 
+    skill view and want to see recipes of specific details 
+-->
+<div *ngIf="skillRecipes">
+    <!-- h5>RECIPES FROM SKILL DETAILS</h5>
+    <br/ -->
+    <label *ngIf="callerSkill">Available recipes for SKILL: {{callerSkill.name}}</label>
+    <!-- ul *ngFor="let skillRecipe of skillRecipes; let i = index">
+        <li *ngIf="skillRecipe.skill" -->
+        <div *ngFor="let skillRecipe of skillRecipes; let i = index">
+            <div *ngIf="skillRecipe.skill">
+            <!-- label>{{i}} -> </label>  
+            Skill Name: <span>{{skillRecipe.skill.name}}</span -->
+            <div *ngIf="skillRecipe.associatedRecipes; else noData">
+                <div *ngIf="skillRecipe.associatedRecipes.length == 0">
+                    No recipes found
+                </div>                        
+                <div *ngIf="skillRecipe.associatedRecipes.length == 1">
+                    Found {{skillRecipe.associatedRecipes.length}} recipe
+                </div>                        
+                <div *ngIf="skillRecipe.associatedRecipes.length > 1">
+                    Found {{skillRecipe.associatedRecipes.length}} recipes
+                </div>                        
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <!-- <th>RECIPE ID</th>-->
+                                <th>RECIPE NAME</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let recipe of skillRecipe.associatedRecipes; let x = index">
+                                <!-- <td>{{recipe.uniqueId}}</td> -->
+                                <td>{{recipe.name}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                        (click)="goToSkillRecipeView(recipe)">
+                                        Recipe details
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>            
+                </div>
+            </div>
+            <!-- /li -->
+        </div>
+        <!-- /ul  -->
+    </div>
+
+    <div id="buttons">
+        <button class="btn btn-primary" (click)="goToAddPage()">
+            Add Skill Recipe
+        </button>
+    </div>
+</div>
+
+<!-- Second div: show recipes related to a subSystem or a module -->
+<div *ngIf="recipes && !showOnlyNonActive">
+    <div *ngIf="isSubsystem">
+        <ul class="treeview" id="tree-recipe">
+            <li>
+                <h3 *ngIf="showSubModules">{{callerTypeToBePrinted}} {{subSystemNameToPrint}}</h3>
+                
+                <div id="recipe-counter-label">
+                    <span *ngIf="recipes.length == 0 && subSystemNameToPrint">
+                        No recipes found for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+                    </span>                        
+                    <span *ngIf="recipes.length == 1 && subSystemNameToPrint">
+                        Found 1 recipe for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+                    </span>                        
+                    <span *ngIf="recipes.length > 1 && subSystemNameToPrint">
+                        Found {{recipes.length}} recipes for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+                    </span>
+                    <span class="glyphicon glyphicon-list-alt"
+                        data-toggle="tooltip"
+                        title="Go to full list"
+                        (click)="goToFullList()"
+                        *ngIf="!showSubModules"></span>
+                </div>
+               
+                <div class="table-responsive">
+                    <table *ngIf="recipes && recipes.length > 0"
+                        class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>RECIPE NAME</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let recipe of recipes; let i = index">
+                                <td>{{recipe.name}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                        (click)="goToSkillRecipeView(recipe)">
+                                        Recipe details
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+
+                <div id="buttons">
+                    <button class="btn btn-primary" (click)="goToAddPage()">
+                        Add Skill Recipe
+                    </button>
+                </div>
+            </li>
+<!--        
+            <div *ngIf="subSystem">
+                subsystem valid
+                {{subSystem}}
+            </div>
+            <div *ngIf="!subSystem">
+                    subsystem not valid
+                </div>
+                <div *ngIf="showSubModules">
+                        showSubModules true
+                    </div>
+                    <div *ngIf="!showSubModules">
+                            showSubModules false
+                        </div>
+-->                        
+<!--                        
+                        <div *ngIf="subSystem.internalModules">
+                                subsystem.internalModules valid
+                            </div>
+                            <div *ngIf="!subSystem.internalModules">
+                                    subsystem.internalModules not valid
+                                </div>
+                            -->    
+<!--                                                        
+                            <div *ngIf="modules">
+                                    modules valid
+                                </div>
+                                <div *ngIf="!modules">
+                                        modules not valid
+                                    </div>
+                                -->                                    
+    <!--                            
+            <li *ngIf="subSystem && showSubModules 
+                && subSystem.internalModules
+                && subSystem.internalModules.length > 0">
+                <ul>
+                    <li *ngFor="let module of subSystem.internalModules">
+                        <recipe-list *ngIf="module.uniqueId"
+                            [callerType]="'module'"
+                            [callerId]="getUrlForSubModule(module.uniqueId)"
+                            [showAddButton]="false">
+                        </recipe-list>
+                        <hr/>
+                    </li>
+                </ul>
+            </li>        
+        -->
+            <li *ngIf="showSubModules 
+                && modules
+                && modules.length > 0">
+                <ul>
+                    <li *ngFor="let module of modules">
+                        <recipe-list *ngIf="module.uniqueId"
+                            [callerType]="'module'"
+                            [callerId]="callerId+'<m>'+module.uniqueId"
+                            [showAddButton]="false">
+                        </recipe-list>
+<!--                        [callerId]="getUrlForSubModule(module.uniqueId)" -->
+                        <hr/>
+                    </li>
+                </ul>
+            </li>        
+        </ul>
+    </div>
+
+    <div *ngIf="isModule">
+        <h3>{{callerTypeToBePrinted}} {{subSystemNameToPrint}}</h3>
+        <div *ngIf="recipes.length == 0 && subSystemNameToPrint">
+            No recipes found for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+        </div>                        
+        <div *ngIf="recipes.length == 1 && subSystemNameToPrint">
+            Found 1 recipe for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+        </div>                        
+        <div *ngIf="recipes.length > 1 && subSystemNameToPrint">
+            Found {{recipes.length}} recipes for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+        </div>
+        <div class="table-responsive">
+            <table *ngIf="recipes && recipes.length > 0"
+                class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>RECIPE NAME</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let recipe of recipes; let i = index">
+                        <td>{{recipe.name}}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm"
+                                (click)="goToSkillRecipeView(recipe)">
+                                Recipe details
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br/>
+        
+        <div id="buttons" *ngIf="showAddButton">
+            <button class="btn btn-primary" (click)="goToAddPage()">
+                Add Skill Recipe
+            </button>
+        </div>
+    </div>
+        
+</div>
+
+<div *ngIf="recipes && showOnlyNonActive">
+    <div *ngIf="isSubsystem">
+
+        <ul class="treeview">
+            <li>
+                <h3 *ngIf="showSubModules">{{callerTypeToBePrinted}} + {{subSystemNameToPrint}}</h3>
+
+                <span *ngIf="nonActiveCounter > 0">
+                    <label>Found {{nonActiveCounter}} non active recipes for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}</label>
+                </span>
+
+                <div class="table-responsive" *ngIf="nonActiveCounter > 0">
+                    <table *ngIf="recipes && recipes.length > 0"
+                        class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>RECIPE NAME</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let recipe of recipes; let i = index">
+                                <tr *ngIf="!recipe.valid">
+                                    <td>{{recipe.name}}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"
+                                            (click)="goToSkillRecipeView(recipe)">
+                                            Recipe details
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>        
+                </div>
+
+                <span *ngIf="nonActiveCounter <= 0"
+                    class="all-active-recipes-ss">
+                    <label>All recipes for this subsystem are active</label>
+                </span>
+            </li>
+
+            <li *ngIf="subSystem && subSystem.internalModules 
+                && subSystem.internalModules.length > 0">
+                <ul>
+                    <li *ngFor="let module of subSystem.internalModules">
+                        <recipe-list *ngIf="module.uniqueId"
+                            [callerType]="'module'"
+                            [callerId]="getUrlForSubModule(module.uniqueId)"
+                            [showOnlyNonActive]="true"
+                            [showAddButton]="false">
+                        </recipe-list>
+                        <hr/>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!--
+        <h3 *ngIf="showSubModules">{{callerTypeToBePrinted}} {{subSystemNameToPrint}}</h3>
+
+        <table *ngIf="recipes && recipes.length > 0"
+            class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>RECIPE NAME</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let recipe of recipes; let i = index">
+                    <tr *ngIf="!recipe.valid">
+                        <td>{{recipe.name}} -- {{recipe.valid}}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm"
+                                (click)="goToSkillRecipeView(recipe)">
+                                Recipe details
+                            </button>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>   
+        
+        <div *ngIf="subSystem && subSystem.internalModules 
+            && subSystem.internalModules.length > 0"
+            class="col-sm-12">
+            <h3>Modules inactive recipes</h3>
+
+            <ng-container *ngFor="let module of subSystem.internalModules">
+                <recipe-list *ngIf="module.uniqueId"
+                    [callerType]="'module'"
+                    [callerId]="getUrlForSubModule(module.uniqueId)"
+                    [showOnlyNonActive]="true"
+                    [showAddButton]="false">
+                </recipe-list>
+            </ng-container>
+        </div>-->
+    </div>
+
+    <div *ngIf="isModule">
+        <h3>{{callerTypeToBePrinted}} {{subSystemNameToPrint}}</h3>
+        <span *ngIf="nonActiveCounter > 0">
+            <label>Found {{nonActiveCounter}} non active recipes for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}</label>
+        </span>
+        <div class="table-responsive" *ngIf="nonActiveCounter > 0">
+            <table *ngIf="recipes && recipes.length > 0"
+                class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>RECIPE NAME</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let recipe of recipes; let i = index">
+                        <tr *ngIf="!recipe.valid">
+                            <td>{{recipe.name}}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm"
+                                    (click)="goToSkillRecipeView(recipe)">
+                                    Recipe details
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <br/>
+        <span *ngIf="nonActiveCounter <= 0"
+            class="all-active-recipes-mm">
+            <label>All recipes for this module are active</label>
+        </span>
+        
+        <div id="buttons" *ngIf="showAddButton">
+            <button class="btn btn-primary" (click)="goToAddPage()">
+                Add Skill Recipe
+            </button>
+        </div>
+    </div>
+</div>
+
+<ng-template #noData>No recipes found <!-- for {{callerType}} {{callerId}} --></ng-template>

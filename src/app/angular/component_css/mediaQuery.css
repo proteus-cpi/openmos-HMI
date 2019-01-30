@@ -1,0 +1,17 @@
+@media (min-width: 992px) and (max-width:1023px) {
+    .main-console ul li{
+        width:300px;
+        background:orange;
+    }
+    
+}
+
+/* #### .SM #### */
+@media (min-width: 768px) and (max-width: 991px) {
+    .main-console ul li{
+        width:200px;
+        background:yellow;
+    }
+    
+}
+

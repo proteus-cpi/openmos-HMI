@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs
+                [callerType]="callerType"
+                [callerId]="callerId"
+            ></breadcrumbs>
+            <div id="execution-table-page-block">
+                <execution-table 
+                    [callerType]="callerType"
+                    [callerId]="callerId">
+                </execution-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<bottom-footer
+    [whereAmIContext]="callerType" 
+    [whereAmISubContext]="'executionTable'" 
+    [whereAmIElement]="callerId"
+>
+</bottom-footer>

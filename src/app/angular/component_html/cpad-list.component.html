@@ -1,0 +1,33 @@
+<top-header></top-header>
+<left-menu></left-menu>
+<breadcrumbs></breadcrumbs>
+<div id="cpad-list-block">
+<h2>System Overview (slide 5)</h2>
+<div *ngIf="cpads; else noData">
+    <div *ngFor="let cpad of cpads" class="col-sm-4">
+      <label (click)="goToCpadDetail(cpad)" class="openmosLink">
+        {{cpad.equipmentId}}
+      </label>      
+      <button
+        (click)="goToEquipmentsList(cpad)">
+        Equipment Modules
+      </button>
+      <button
+        (click)="goToSkillList(cpad)">
+        Available Skills
+      </button>
+      <button
+        (click)="goToRecipeList(cpad)">
+        Available Skill Recipes
+      </button>
+      <button 
+        (click)="goToExecutionTable(cpad)">
+        ExecutionTable
+      </button>
+      <br/>
+    </div>
+</div>
+<ng-template #noData>Nessun dato da mostrare!</ng-template>
+</div>
+<button-toolbar></button-toolbar>
+<bottom-footer></bottom-footer>

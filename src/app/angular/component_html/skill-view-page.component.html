@@ -1,0 +1,421 @@
+<!-- skill-view></skill-view -->
+
+<div *ngIf="selectedSkill; else noData">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <breadcrumbs [callerType]="callerType" 
+                    [callerId]="callerId"
+                    [actualObject]="selectedSkill">
+                </breadcrumbs>
+                <h3>DETAIL OF SKILL {{selectedSkill.name}} - {{selectedSkill.type}}</h3>
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary btn-lg btn-block" (click)="changeView(4)">Main Properties</button>
+
+                <button class="btn btn-primary btn-lg btn-block" (click)="changeView(0)">Associated Parameters</button>
+
+                <button class="btn btn-primary btn-lg btn-block" (click)="changeView(1)">Associated KPIS</button>
+
+                <button class="btn btn-primary btn-lg btn-block" (click)="changeView(2)">Associated Control Port</button>
+
+                <button class="btn btn-primary btn-lg btn-block" (click)="changeView(3)">Associated Skill Requirements</button>
+
+                <button class="btn btn-warning btn-sm btn-block" (click)="showAllProperties()">Show All Properties</button>
+                <br>
+
+                <button class="btn btn-primary btn-sm btn-block" (click)="changeView(5)">Trigger History</button>
+
+                <br>
+                <button class="btn btn-primary btn-sm btn-block" (click)="goToRecipes()">Associated Recipes</button>
+                <!-- a style="cursor:pointer;" (click)="goToRecipes()">Associated Recipes</a -->
+
+                <br>
+                <button class="btn btn-primary btn-sm btn-block" (click)="goToAddNewRecipeSkill()">Add new recipe</button>
+                <!-- td>
+                    <button class="btn btn-primary btn-sm"
+                        (click)="goToAddNewRecipeSkill(skill)">
+                        Add new recipe
+                    </button>
+                </td -->
+
+            </div>
+<!-------------------------------->
+
+<div class="col-sm-9" id="values-div">
+    <div id="main-properties" *ngIf="showSelector[4]" class="sr-details col-sm-12">
+        <h4>SKILL PROPERTIES</h4>
+        <div id="skill-id-div" class="col-sm-6">
+            <span>
+                <label>Skill Id: </label> 
+                <input type="text" 
+                    class="form-control"
+                    [(ngModel)]="this.selectedSkill.uniqueId"
+                    disabled/>
+            </span>
+        </div>
+
+        <div id="skill-name-div" class="col-sm-6">
+            <span>
+                <label>Skill name: </label>
+                <input type="text" 
+                    class="form-control"
+                    [(ngModel)]="this.selectedSkill.name"
+                    disabled />
+            </span>
+        </div>
+
+        <!-- div id="skill-description-div" class="col-sm-6">
+            <span>
+                <label>Skill description: </label>
+                <input type="text"
+                    [(ngModel)]="this.selectedSkill.description"
+                    class="form-control"
+                    disabled/>
+            </span>
+        </div -->
+
+        <!-- div id="skil-state-div" class="col-sm-6">
+            <div *ngIf="this.skil.state">
+                <span>
+                <label>Skill state: </label>
+                <input type="text"
+                    [(ngModel)]="this.selectedSkill.state"
+                    class="form-control"
+                    disabled/>
+            </span>
+            </div>
+            <div *ngIf="!this.recipe.state">
+                <label>Skill state: n/a</label>
+            </div>
+        </div -->
+
+        <div id="skill-description-div" class="col-sm-6">
+            <span>
+            </span>
+        </div>
+        <div class="col-sm-12" id="skill-editbtn-div">
+            <button class="btn btn-primary"                                
+                (click)="triggerThisSkill()">
+                Trigger this skill
+            </button>
+            <div id="loader-container" style="display: none;">
+                <div class="loader"></div>
+                Executing recipe
+            </div>
+            {{this.errorMessage}}
+            {{this.triggerResponse}}
+            <button class="btn btn-primary"    
+                *ngIf="wasTriggered && wasTriggeredSuccessfully"                            
+                (click)="triggeringResults()">
+                Triggering results
+            </button>
+
+
+            <!-- accept-condition *ngIf="isEditingProperties">
+            </accept-condition>
+            <div data-toggle="tooltip"
+                title="Accept conditions"
+                id="confirm-div"                
+                class="confirm-div-button">
+                <button class="btn btn-success"
+                    disabled
+                    button-type="confirm"
+                    *ngIf="isEditingProperties"
+                    (click)="editProperties(false)">
+                    Save
+                </button>
+            </div>
+            <button class="btn btn-danger"
+                *ngIf="isEditingProperties"
+                (click)="cancelPropertiesModifications()">
+                Cancel Modifications
+            </button -->
+        </div>
+    </div>
+    
+<!-------------------------------->
+
+            <div class="col-sm-12">
+                <div id="parameter" *ngIf="showSelector[0]" class="sr-details col-sm-12">
+                    <h4>PARAMETERS</h4>
+                    <!-- <div *ngIf="this.selectedSkill.parameters; else noParametersData"> -->
+                    <div *ngIf="this.selectedSkill.parameters; else noParametersData">
+                        <div *ngIf="this.selectedSkill.parameters.length == 0">
+                        <!-- div *ngIf="this.parametersCount == 0" -->
+                            No parameters found.
+                        </div>
+                        <div *ngIf="this.selectedSkill.parameters.length == 1">
+                        <!-- <div *ngIf="this.parametersCount == 1"> -->
+                            Found 1 parameter.
+                        </div>
+                        <div *ngIf="this.selectedSkill.parameters.length > 1">
+                        <!-- <div *ngIf="this.parametersCount > 1"> -->
+                            Found {{this.selectedSkill.parameters.length}} parameters.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <!-- *ngIf="selectedSkill.parameters.length > 0" -->
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>NAME</th>
+                                        <!-- th>DESCRIPTION</th -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let parameter of this.selectedSkill.parameters; let i = index">
+                                        <td>{{parameter.uniqueId}}</td>
+                                        <td>{{parameter.name}}</td>
+                                        <!-- td>{{parameter.type}}</td -->
+                                    </tr>
+
+                                </tbody> 
+                                <!-- tbody *ngFor="let paramPort of this.selectedSkill.parameterPorts">
+                                    <tr *ngFor="let parameter of paramPort">
+                                        <td>{{parameter.uniqueId}}</td>
+                                        <td>{{parameter.name}}</td>
+                                        <td>{{parameter.type}}</td>
+                                    </tr>
+                                </tbody -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="kpis" *ngIf="showSelector[1]" class="sr-details col-sm-12">
+                    <h4>KPIS</h4>
+                    <div *ngIf="this.selectedSkill.kpis; else noKpisData">
+                    <!-- <div *ngIf="this.selectedSkill.informationPorts; else noKpisData"> -->
+                        <div *ngIf="this.selectedSkill.kpis.length == 0">
+                        <!-- <div *ngIf="this.kpisCount == 0"> -->
+                            No kpis found.
+                        </div>
+                        <div *ngIf="this.selectedSkill.kpis.length == 1">
+                        <!-- <div *ngIf="this.kpisCount == 1"> -->
+                            Found 1 kpi.
+                        </div>
+                        <div *ngIf="this.selectedSkill.kpis.length > 1">
+                        <!-- <div *ngIf="this.kpisCount > 1"> -->
+                            Found {{this.selectedSkill.kpis.length}} kpis.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <!-- *ngIf="selectedSkill.kpis.length > 0" -->
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>NAME</th>
+                                        <!-- th>DESCRIPTION</th -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr *ngFor="let kpi of this.selectedSkill.kpis; let i = index">
+                                            <td>{{kpi.uniqueId}}</td>
+                                            <td>{{kpi.name}}</td>
+                                            <!-- td>{{kpi.type}}</td -->
+                                        </tr>
+                                    </tbody>
+                                <!-- <tbody *ngFor="let infoPort of this.selectedSkill.informationPorts">
+                                    <tr *ngFor="let kpi of infoPort.kpis">
+                                        <td>{{kpi.uniqueId}}</td>
+                                        <td>{{kpi.name}}</td>
+                                        <td>{{kpi.type}}</td>
+                                    </tr>
+                                </tbody> -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="controls" *ngIf="showSelector[2]" class="sr-details col-sm-12">
+                    <h4>CONTROLS</h4>
+                    <div *ngIf="this.selectedSkill.controlPorts; else noControlPortsData">
+                        <div *ngIf="this.selectedSkill.controlPorts.length == 0">
+                            No control ports found.
+                        </div>
+                        <div *ngIf="this.selectedSkill.controlPorts.length == 1">
+                            Found 1 control port.
+                        </div>
+                        <div *ngIf="this.selectedSkill.controlPorts.length > 1">
+                            Found {{this.selectedSkill.controlPorts.length}} control ports.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" *ngIf="selectedSkill.controlPorts.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>NAME</th>
+                                        <th>DIRECTION</th>
+                                        <th>TYPE</th>
+                                        <th>DESCRIPTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let controlPort of this.selectedSkill.controlPorts; let i = index">
+                                        <td>{{controlPort.uniqueId}}</td>
+                                        <td>{{controlPort.name}}</td>
+                                        <td>{{controlPort.direction}}</td>
+                                        <td>{{controlPort.type}}</td>
+                                        <td>{{controlPort.description}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="skill-req" *ngIf="showSelector[3]" class="sr-details col-sm-12">
+                    <h4>SKILL REQUIREMENTS</h4>
+                    <div *ngIf="this.selectedSkill.skillRequirements; else noSkillRequirementsData">
+                        <div *ngIf="selectedSkill.skillRequirements.length == 0">
+                            No skill requirements found.
+                        </div>
+                        <div *ngIf="selectedSkill.skillRequirements.length == 1">
+                            Found 1 skill requirement.
+                        </div>
+                        <div *ngIf="selectedSkill.skillRequirements.length > 1">
+                            Found {{selectedSkill.skillRequirements.length}} skill requirements.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" *ngIf="selectedSkill.skillRequirements.length > 0">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>NAME</th>
+                                    <th>RECIPES</th>
+                                    <!-- th></th -->
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let sr of selectedSkill.skillRequirements">
+                                        <td>
+                                            {{sr.uniqueId}}
+                                        </td>
+                                        <td>
+                                            {{sr.name}}
+                                        </td>
+                                        <td>
+                                            <div *ngIf="sr.recipeIDs && sr.recipeIDs.length > 0">
+                                                <span *ngFor="let r of sr.recipeIDs; let z = index" >
+                                                    {{getRecipeName(r)}}
+                                                    <!-- label for="sqreq_{{r.recipe}}_{{z}}">{{getRecipeName(r.recipe)}}</label -->
+                                                </span>    
+                                            </div>                                                                
+                                        </td>
+                                        <!-- td>
+                                            <div *ngIf="sr.recipeIDs && sr.recipeIDs.length > 0">
+
+                                                    <div class="table-responsive">
+                                                            <table class="table table-striped table-hover" *ngIf="sr.recipeIDs.length > 0">
+                                                                <thead>
+                                                                    <th>RECIPE ID</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let r of sr.recipeIDs">
+                                                                        <td>
+                                                                            {{r}}
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>                                                
+
+                                            </div>
+                                        </td -->
+                                        <!-- td>
+                                            {{sr.srType}}
+                                        </td -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sr-details col-sm-12"  *ngIf="showSelector[5]">
+                    <h4>TRIGGER HISTORY</h4>
+                    <!-- triggered-skills-list-page
+                        [skillId]="this.selectedSkill.uniqueId">
+                    </triggered-skills-list-page -->
+                    <div class="col-sm-12">
+                        <triggered-skills-list-page 
+                            *ngIf="!showTriggerDetail"
+                            [skillId]="this.selectedSkill.uniqueId"
+                            (onDetail)="onTriggerDetail($event)">
+                        </triggered-skills-list-page>
+                        <a *ngIf="showTriggerDetail"
+                            (click)="goToTriggerList()">
+                            Go back to list
+                        </a>
+                        <recipe-execution-data-graph
+                            *ngIf="showTriggerDetail"
+                            [recipeId]="selectedTriggerRec"
+                            [productInstanceId]="selectedTriggerProd"
+                            [functionName]="'trg_recipe'">
+                        </recipe-execution-data-graph>
+                    </div>
+            </div>
+
+            <div id="execution-data-history-product-recipe" *ngIf="showSelector[6]" class="sr-details col-sm-12">
+                <h4>RECIPE EXECUTION DATA FOR PRODUCT AND RECIPE</h4>
+                <recipe-execution-data-graph
+                    [recipeId]="selectedTriggerRec"
+                    [productInstanceId]="selectedTriggerProd"
+                    [functionName]="'trg_recipe'">
+                </recipe-execution-data-graph>
+            </div>
+
+
+<!-- 
+                    <div id="execution-data-history-product-recipe" *ngIf="showSelector[6]" class="sr-details col-sm-12">
+                        <h4>RECIPE EXECUTION DATA FOR PRODUCT AND RECIPE</h4>
+                        <recipe-execution-data-graph
+                            [recipeId]="recipe.uniqueId"
+                            [productInstanceId]="productInstanceId"
+                            [functionName]="'trg_recipe'">
+                        </recipe-execution-data-graph>
+                    </div>
+
+                    <div id="execution-data-history-product-recipe" *ngIf="showSelector[7]" class="sr-details col-sm-12">
+                        <h4>TRIGGER HISTORY</h4>
+                        <div class="col-sm-12">
+                            <triggered-recipes-list-page 
+                                *ngIf="!showTriggerDetail"
+                                [recipeId]="recipe.uniqueId"
+                                (onDetail)="onTriggerDetail($event)">
+                            </triggered-recipes-list-page>
+                            <a *ngIf="showTriggerDetail"
+                                (click)="goToTriggerList()">
+                                Go back to list
+                            </a>
+                            <recipe-execution-data-graph
+                                *ngIf="showTriggerDetail"
+                                [recipeId]="recipe.uniqueId"
+                                [productInstanceId]="selectedTriggerProd"
+                                [functionName]="'trg_recipe'">
+                            </recipe-execution-data-graph>
+                        </div>
+
+-->
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <!-- button 
+        (click)="changeView(3)">
+        Associated Module
+    </button -->
+</div>
+
+<ng-template #noData>Skill not found.</ng-template>
+<ng-template #noParametersData>No parameters data found.</ng-template>
+<ng-template #noKpisData>No kpis data found.</ng-template>
+<ng-template #noControlPortsData>No control ports data found.</ng-template>
+<ng-template #noSkillRequirementsData>No skill requirements data found</ng-template>
+
+<!-- bottom-footer [whereAmIContext]="'skillDetail'" [whereAmISubContext]="callerType" [whereAmIElement]="" -->
+<bottom-footer [whereAmIContext]="'skillDetail'" [whereAmISubContext]="callerType" [whereAmIElement]="callerId">
+</bottom-footer>

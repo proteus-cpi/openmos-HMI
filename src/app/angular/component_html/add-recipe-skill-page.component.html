@@ -1,0 +1,54 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs *ngIf="callerSkill"
+                [callerType]="callerType" 
+                [callerId]="callerId"
+                [actualObject]="callerSkill">
+            </breadcrumbs>
+
+            <breadcrumbs *ngIf="!callerSkill"
+                [callerType]="callerType" 
+                [callerId]="callerId">
+            </breadcrumbs>
+
+            <!--<label style="color: red;">FROM: {{from}}</label>
+            <br/>-->
+
+            <div *ngIf="!showInsertComponent"
+                class="form-group">
+                <h4 *ngIf="subSystemNameToPrint">
+                    SubSystem: {{subSystemNameToPrint}}
+                </h4>
+                <h4>Choose one from list of available skills for this subSystem </h4>
+                <select *ngIf="skillsChoices"
+                    [(ngModel)]="callerSkill" 
+                    (ngModelChange)="onSelectSkill()"
+                    class="form-control">
+                    <option *ngFor="let skill of skillsChoices"
+                        [ngValue]="skill">
+                        {{skill.uniqueId}} - {{skill.name}} - {{skill.description}}
+                    </option>
+                </select>
+            </div>
+
+            <div *ngIf="!isFromSkill && showInsertComponent">
+                <a (click)="goToSelectSkill()">Go back to skill choice</a>
+            </div>
+
+            <add-skill-recipe *ngIf="showInsertComponent" 
+                [callerType]="callerType" 
+                [callerId]="callerId" 
+                [callerSkill]="callerSkill">
+            </add-skill-recipe>
+        </div>
+    </div>
+</div>
+<br/>
+<!--
+    <bottom-footer
+    [whereAmIContext]="callerType" 
+    [whereAmISubContext]="'executionTable'" 
+    [whereAmIElement]="callerId">
+>
+</bottom-footer>-->

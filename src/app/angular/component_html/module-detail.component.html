@@ -1,0 +1,61 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div *ngIf="selectedModule">
+
+                <breadcrumbs
+                [callerType]="'module'"
+                [callerId]="callerId"
+                [actualObject]="selectedModule"
+                ></breadcrumbs>
+
+            </div>
+            <div *ngIf="!selectedModule">
+
+                    <breadcrumbs
+                    [callerType]="'module'"
+                    [callerId]="callerId"
+                    ></breadcrumbs>
+    
+                </div>
+    
+            <div id="module-detail-block">
+
+            <div *ngIf="selectedModule; else test">
+                <div>
+                    <h2>DETAIL OF MODULE {{selectedModule.name}}</h2>
+                </div>
+                <br/>
+
+                <div>
+                    <module-list
+                        [callerType]="callerType"
+                        [callerId]="callerId">
+                    </module-list>
+                </div>
+                <hr/>
+                <div>
+                    <skill-list
+                        [callerType]="callerType"
+                        [callerId]="callerId"></skill-list>
+                </div>
+                <hr/>
+                <div>
+                    <recipe-list
+                        [callerType]="callerType"
+                        [callerId]="callerId"></recipe-list>
+                </div>
+            </div>
+            <ng-template #test>Requested module object with 
+                id = {{this.selectedModule.uniqueId} not found 
+                into the system</ng-template>
+        </div>
+    </div>
+</div>
+
+<bottom-footer
+    [whereAmIContext]="'module'" 
+    [whereAmISubContext]="" 
+    [whereAmIElement]="callerId"
+></bottom-footer>
+<!-- [whereAmIElement]="selectedModule.uniqueId" -->

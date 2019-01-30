@@ -1,0 +1,40 @@
+<h2>FROM MOCK</h2>
+<ul>
+  <li *ngFor="let kpi of kpis2">
+    <div>
+      <label>ID:</label>{{kpi.uniqueId}}
+      <label>DESCRIPTION:</label>{{kpi.description}}
+      <label>UPPER BOUND:</label>{{kpi.defaultUpperBound}}
+      <label>LOWER BOUND:</label>{{kpi.defaultLowerBound}}
+      <label>CURRENT VALUE:</label>{{kpi.currentValue}}
+      <label>UNIT:</label>{{kpi.unit}}
+    </div>
+  </li>
+</ul>
+<h2>FROM WEB SERVICE JSON</h2>
+<ul>
+  <li *ngFor="let kpi of kpis">
+    <div>
+      <label>ID:</label>{{kpi.uniqueId}}
+      <label>DESCRIPTION:</label>{{kpi.description}}
+      <label>UPPER BOUND:</label>{{kpi.defaultUpperBound}}
+      <label>LOWER BOUND:</label>{{kpi.defaultLowerBound}}
+      <label>CURRENT VALUE:</label>{{kpi.currentValue}}
+      <label>UNIT:</label>{{kpi.unit}}
+    </div>
+  </li>
+</ul>
+
+<h2 *ngIf="kpisX">FROM WEB SERVICE XML</h2>
+<ul>
+  <li *ngFor="let kpi of kpisX">
+    <div>
+      <label>ID:</label>{{kpi.uniqueId}}
+      <label>DESCRIPTION:</label>{{kpi.description}}
+      <label>UPPER BOUND:</label>{{kpi.defaultUpperBound}}
+      <label>LOWER BOUND:</label>{{kpi.defaultLowerBound}}
+      <label>CURRENT VALUE:</label>{{kpi.currentValue}}
+      <label>UNIT:</label>{{kpi.unit}}
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,143 @@
+<div class="container-fluid" *ngIf="showInsertForm">
+    <div class="row" id="assessment-container">
+        <div class="col-sm-12" id="assessment-main-container" >
+            <breadcrumbs [callerType]="callerType" [callerId]="callerId">
+            </breadcrumbs>
+            <div id="overlay" class="overlay" style="display: none;">
+                <!-- onclick="removeOverlay()" -->
+            </div>
+            <h3>New process assessment</h3>
+
+            <div>
+                <span>
+                    Process assessment for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}
+                </span>
+            </div>
+
+            <div class="row new-assessment-row" *ngIf="processAssessment">
+                <!-- Assessment with rows object -->
+                <!--<div class="col-sm-6 assessment-type-title">
+                    <label>Main Type</label>
+                </div>
+                <div class="col-sm-6 assessment-rating-title">
+                    <div class="col-sm-4">
+                        <label>Rating</label>
+                    </div>
+                </div>-->
+                <div class="col-sm-12">
+                    <span class="main-type-label-row">
+                        <label>Main Type</label>
+                    </span>
+                    <span class="rating-label-row">
+                        <label>Rating</label>
+                    </span>
+                </div>
+                <div class="col-sm-12" 
+                    *ngFor="let row of processAssessment.rows"
+                    class="rating-row">
+                    <span class="assessment-type-label">
+                        {{row.parType}}
+                    </span>
+                    
+                    <span class="assessment-rating-input">
+                        <input type="range" [(ngModel)]="row.rating" class="assessment-rating" />
+                    </span>
+                    
+                    <span class="assessment-rating-value">
+                        {{row.rating}}
+                    </span>
+                   
+                    <!--
+                    <div class="col-sm-6 assessment-type">
+                        {{row.type}}
+                    </div>
+                    <div class="col-sm-3 assessment-rating-div">
+                        <input type="range" [(ngModel)]="row.rating" class="assessment-rating" />
+                    </div>
+                    <div class="col-sm-1">
+                        {{row.rating}}
+                    </div>-->
+                </div>
+
+                <div class="col-sm-12 new-assessment-comments">
+                    <label>Process assessment user's comments </label>
+                    <br/>
+                    <textarea [(ngModel)]="processAssessment.userText" class="form-control"></textarea>
+                </div>
+                
+                <!--<div class="col-sm-12">
+                    <button *ngIf="!observation" class="btn btn-primary" (click)="clearStorage()" onclick="test()">
+                        Insert observation
+                    </button>
+                    <div *ngIf="observation" class="col-sm-12">
+                        <div class="row">
+                            <label>Observation</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Id: </label>{{observation.uniqueId}}
+                            <br/>
+                            <label>Name: </label>{{observation.name}}
+                            <br/>
+                            <label>Description: </label>{{observation.description}}
+                            <br/>
+                            <label>User text: </label>
+                            {{observation.userText}}
+                        </div>
+                        <div class="col-sm-8">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <th>Type</th>
+                                    <th>Subtype</th>
+                                    <th>Value</th>
+                                    <th>Unit</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of observation.rows">
+                                        <td>{{row.type}}</td>
+                                        <td>{{row.subtype}}</td>
+                                        <td>{{row.value}}</td>
+                                        <td>{{row.unit}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+            <accept-condition></accept-condition>
+
+            <div class="confirm-div-button" id="confirm-div" title="Accept Conditions" data-toggle="tooltip">
+                <button disabled (click)="insertProcessAssessment()" class="btn btn-success" button-type="confirm">
+                    Insert process assessment
+                </button>
+            </div>
+        </div>
+
+        <!-- TO REMOVE -->
+       <!-- <div class="col-sm-0" id="add-new-observation">
+            <add-equipment-observation >
+            </add-equipment-observation>
+
+            <button (click)="onInsertObservation()" class="btn btn-success goBack" value="hide" onclick="test()">
+                Go back to assessment
+            </button>
+        </div>
+    </div>-->
+    </div>
+</div>
+
+<div *ngIf="!(showInsertForm)"
+    class="col-sm-12">
+    <h3>
+        Process assessment inserted correctly!
+    </h3>
+    <div>
+        <a (click)="startNewInsert()">Insert another process assessment</a>
+        <br/>
+        <a href="/">Go back to system overview</a>
+        <br/>
+        <a (click)="gotoList()">Go to assessments list</a>
+        <br/>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+
+                <div *ngIf="module">
+                        <breadcrumbs
+                                [callerType]="callerType"
+                                [callerId]="callerId"
+                                [actualObject]="selectedModule"
+                        ></breadcrumbs>        
+                </div>
+        
+                <div *ngIf="!module">
+                        <breadcrumbs
+                [callerType]="callerType"
+                [callerId]="callerId"
+            ></breadcrumbs>
+                </div>
+
+            <div id="recipe-list-page-block">
+                <recipe-list *ngIf="!showOnlyNonActive"
+                    [callerType]="callerType"
+                    [callerId]="callerId">
+                </recipe-list>
+
+                <recipe-list *ngIf="showOnlyNonActive"
+                    [callerType]="callerType"
+                    [callerId]="callerId"
+                    [showOnlyNonActive]="true"
+                    [showAddButton]="false">
+                </recipe-list>
+            </div>
+        </div>
+    </div>
+</div>   
+<bottom-footer 
+    [whereAmIContext]="callerType" 
+    [whereAmISubContext]="'recipes'" 
+    [whereAmIElement]="callerId">
+</bottom-footer>

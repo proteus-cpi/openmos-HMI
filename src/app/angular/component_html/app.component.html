@@ -1,0 +1,22 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<!-- <div style="text-align:center; background-color:red"> -->
+<div class="head-main-top">
+  <div class="container-fluid">
+    <a href="#" class="main-logo" style="float:left">
+      <img src="assets/openmos-logo.png" />
+      <span>{{title}}!</span>
+
+    </a>
+    <div style="padding-left: 250px">
+      <label>Current User: </label>
+      <label style="cursor:pointer" *ngIf="!editUser" (click) = "editUser = true; userInfo = actualUserinfo">{{actualUserinfo}}</label>
+      <span *ngIf="editUser">
+        <input type="text" [value] = "userInfo" (input)="userInfo = $event.target.value"/>
+        <button (click) = "confirmUser()" class="btn btn-success">Confirm</button>
+        <button (click) = "editUser = false" class="btn btn-danger">Cancel</button>
+      </span>
+    </div>
+  </div>
+  
+</div>
+<router-outlet></router-outlet>

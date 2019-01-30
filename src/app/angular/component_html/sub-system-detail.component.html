@@ -1,0 +1,152 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs *ngIf="selectedSubSystem" 
+                [callerType]="'subSystem'" 
+                [callerId]="callerId">
+            </breadcrumbs>
+
+            <div id="subSystem-detail-block">
+                <!-- TYPE={{selectedSubSystem.type}} -->
+
+                <div *ngIf="selectedSubSystem; else test">
+                    <!-- just for tests, to remove - begin -->
+                    <!-- ng-template [ngIf]="selectedSubSystem.type == 'CyberPhysicalAgentDescriptionType'">
+                    <div>
+                    <h2>Workstation View (Slide 6)</h2>
+                    </div>
+                    </ng-template -->
+                    <!-- just for tests, to remove - end -->
+                    <ng-template [ngIf]="selectedSubSystem.type == 'WorkStation'">
+                        <div>
+                            <h3>
+                                DETAIL OF WORKSTATION {{selectedSubSystem.name}}
+                                <span class="label label-primary">{{selectedSubSystem.status}}</span>                                
+                                <!-- span class="label label-primary">{{selectedSubSystem.stage}}</span -->
+                            </h3>
+                        </div>
+                    </ng-template>
+                    <ng-template [ngIf]="selectedSubSystem.type == 'TransportSystem'">
+                        <div>
+                            <h3>
+                                DETAIL OF TRANSPORT {{selectedSubSystem.name}}
+                                <span class="label label-primary">{{selectedSubSystem.status}}</span>
+                                <!-- span class="label label-primary">{{selectedSubSystem.stage}}</span -->
+                            </h3>
+                        </div>
+                    </ng-template>
+                    <ng-template [ngIf]="selectedSubSystem.type == 'UnknownType'">
+                        <div>
+                            <h3>
+                                DETAIL OF SUBSYSTEM {{selectedSubSystem.name}}: UnknownType
+                                <span class="label label-primary">{{selectedSubSystem.status}}</span>
+                                <!-- span class="label label-primary">{{selectedSubSystem.stage}}</span -->
+                            </h3>
+                            
+                        </div>
+                    </ng-template>
+
+                    <div id="subsystem-stage" class="subsystem-stage-div">
+                        <span (click)="startUpdateSubSystemStage()"
+                            *ngIf="!isUpdatingSubSystemStage"
+                            class="{{selectedSubSystem.stage | lowercase}}">
+                            <label>SubSystem stage: {{selectedSubSystem.stage}}</label>
+                        </span>
+                        <span *ngIf="isUpdatingSubSystemStage">
+                          <label>New stage: </label>
+                          <select class="form-control"
+                            [(ngModel)]="newSubSystemStage.stage"
+                            style="display: inline-block; width: 150px;">
+                            <option *ngFor="let stage of possibleSubSystemStage">
+                              {{stage}}
+                            </option>
+                          </select>
+                          <button class="btn btn-primary" 
+                            (click)="updateSubSystemStage()">
+                            Save
+                          </button>
+                          <button class="btn btn-danger"
+                            (click)="cancelUpdateSubSystemStage()">
+                            Cancel
+                          </button>
+                        </span>
+                      </div>
+            
+                    <div>
+                        <module-list [callerType]="'subSystem'" [callerId]="callerId">
+                            <!-- [callerId]="selectedSubSystem.uniqueId"> -->
+                        </module-list>
+                    </div>
+                    <hr/>
+
+                    <execution-table [callerType]="'subSystem'" 
+                        [callerId]="callerId"
+                        [showLinkPage]="true">
+                        <!-- [callerId]="selectedSubSystem.uniqueId"> -->
+                    </execution-table>
+                    <hr/>
+
+                    <skill-list [callerType]="'subSystem'" 
+                        [callerId]="callerId"
+                        [showSubModules]="true">
+                        <!-- [callerId]="selectedSubSystem.uniqueId"> -->
+                    </skill-list>
+                    <hr/>
+
+                    <recipe-list [callerType]="'subSystem'" 
+                        [callerId]="callerId"
+                        [showSubModules]="true">
+                        <!-- [callerId]="selectedSubSystem.uniqueId"> -->
+                    </recipe-list>
+
+                    <hr/>
+
+                    <!-- physical-params-list [callerType]="'subSystem'" 
+                        [callerId]="callerId">
+                        < ! - -  [callerId]="selectedSubSystem.uniqueId">   - - >
+                    </physical-params-list>
+
+                    <hr/ -->
+                    
+                </div>
+            </div>
+        </div>
+
+        <ng-template #test>Requested subSystem object with id = {{this.selectedSubSystem.uniqueId} not found into the system</ng-template>
+    </div>
+
+    <div id="intermediatePhaseMessage" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-body">
+            <p>You can't change stage while the system is in an intermediate stage</p>
+            
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-danger" data-dismiss="modal">
+                  OK
+              </button>
+            </div>
+        </div>
+      </div>
+      </div>
+
+      <div id="assestWarningMessage" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-body">
+            <p>You need to assess the equipment before leaving RampUp stage</p>            
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-danger" data-dismiss="modal">
+                  OK
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+          
+                
+    <bottom-footer [whereAmIContext]="'subSystem'" [whereAmISubContext]="" [whereAmIElement]="callerId"></bottom-footer>
+    <!-- [whereAmISubContext]="selectedSubSystem.type"  -->
+    <!--[whereAmIElement]="selectedSubSystem.uniqueId" -->

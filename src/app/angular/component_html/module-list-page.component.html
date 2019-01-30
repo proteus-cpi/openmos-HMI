@@ -1,0 +1,23 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs
+                [callerType]="callerType"
+                [callerId]="callerId"
+            ></breadcrumbs>
+            <div id="module-list-page-block">
+                    <module-list
+                        [callerType]="callerType"
+                        [callerId]="callerId">
+                    </module-list>
+            </div>
+        </div>
+    </div>
+</div>
+
+<bottom-footer 
+    [whereAmIContext]="callerType" 
+    [whereAmISubContext]="'modules'" 
+    [whereAmIElement]="callerId">
+</bottom-footer>

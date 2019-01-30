@@ -1,0 +1,72 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs
+                [callerType]="'subSystems'"
+                [callerId]="'subsystem'">
+            </breadcrumbs>
+            <h2>Products List</h2>
+            <div *ngIf="products; else noData">
+                <div *ngIf="products.length == 0">
+                    No products found.
+                </div>                        
+                <div *ngIf="products.length == 1">
+                    Found 1 product.
+                </div>                        
+                <div *ngIf="products.length > 1">
+                    Found {{products.length}} products.
+                </div>                        
+                <table class="table table-hover table-striped"
+                    *ngIf="products && products.length > 0">
+                    <thead>
+                        <tr>
+                            <th>PRODUCT ID</th>
+                            <th>PRODUCT NAME</th>
+                            <th>DESCRIPTION</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of products; let i = index">
+                            <td>{{product.uniqueId}}</td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.description}}</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                    (click)="goToProductDetail(product)">
+                                    Product detail
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger"
+                                    (click)="deleteProduct(product)">
+                                    Delete product
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <br/>
+            <br/>
+            <button (click)="addNewProduct()"
+                class="btn btn-primary">
+                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                <span class="nav-text">Add new product file</span>
+            </button>
+            <button (click)="createOrder()"
+                class="btn btn-primary">
+                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                <span class="nav-text">Create a production order</span>
+            </button>
+        </div>
+    </div>
+</div>
+  
+<ng-template #noData>No products found.</ng-template>
+
+<bottom-footer 
+    [whereAmIContext]="'products'" 
+    [whereAmISubContext]="" 
+    [whereAmIElement]="">
+</bottom-footer>

@@ -1,0 +1,216 @@
+<!--h3>Recipe Execution Data</h3-->
+<div class="col-sm-12" class="execution-data-history" *ngIf="(functionName === 'recipe_execution_data_history')">
+  <!--div class="row">
+    <label>RECIPE ID: </label>
+    <span>{{recipeId}}</span>
+    <br/>
+  </div-->
+
+  <div class="col-sm-12">
+    <div class="col-sm-4">
+      <label>Begin interval</label>
+      <input type="datetime-local"
+        class="form-control"
+        [value]="this.from | date: 'yyyy-MM-ddTHH:mm'"
+        (input)="from = parseDate($event.target.value)"/>
+    </div>
+    <div class="col-sm-4">
+      <label>End interval</label>
+      <input type="datetime-local"
+        class="form-control"
+        [value]="to | date: 'yyyy-MM-ddTHH:mm'"
+        (input)="to = parseDate($event.target.value)"/>
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="col-sm-4">
+      <label>Which KPI</label>
+      <select *ngIf="possibleKpiName"
+        class="form-control"
+        [(ngModel)]="selectedKpiName">
+        <option *ngFor="let name of possibleKpiName">
+          {{name}}
+        </option>
+      </select>
+    </div>
+    <div class="col-sm-4">
+      <label>Graph type</label>
+      <select class="form-control"
+        [(ngModel)]="selectedGraphType"
+        (change)="selectGraph($event.target.value)">
+        <option *ngFor="let type of graphType">
+          {{type}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="col-sm-8">
+      <button (click)="getData()" class="btn btn-primary">Draw</button>
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-12" class="execution-data-history" *ngIf="(functionName == 'trg_recipe')">
+  <!--div class="row">
+    <label>RECIPE ID: </label>
+    <span>{{recipeId}}</span>
+    <br/>
+  </div>
+  <div class="row">
+    <label>PRODUCT INSTANCE ID: </label>
+    <span>{{productInstanceId}}</span>
+    <br/>
+  </div-->
+
+  <div class="col-sm-12">
+    <h3>SHOW TRIGGER RESULT</h3>
+  </div>
+
+  <div class="col-sm-12" *ngIf="repeaterCounter >= 0">
+    <span class="label label-danger">Recipe is in execution, please wait</span>
+  </div>
+
+  <div class="col-sm-12" *ngIf="repeaterCounter == -1">
+    <span class="label label-warning">Error executing recipe, cannot get data now. Try later</span>
+  </div>
+
+  <div class="col-sm-12" style="visibility: hidden">
+    <div class="col-sm-4">
+      <label>Begin interval</label>
+      <input type="datetime-local"
+        class="form-control"
+        [value]="this.from | date: 'yyyy-MM-ddTHH:mm'"
+        (input)="from = parseDate($event.target.value)"/>
+    </div>
+    <div class="col-sm-4">
+      <label>End interval</label>
+      <input type="datetime-local"
+        class="form-control"
+        [value]="to | date: 'yyyy-MM-ddTHH:mm'"
+        (input)="to = parseDate($event.target.value)"/>
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="col-sm-4">
+      <label>Which KPI</label>
+      <select *ngIf="possibleKpiName"
+        class="form-control"
+        [(ngModel)]="selectedKpiName">
+        <option *ngFor="let name of possibleKpiName">
+          {{name}}
+        </option>
+      </select>
+    </div>
+    <div class="col-sm-4">
+      <label>Graph type</label>
+      <select class="form-control"
+        [(ngModel)]="selectedGraphType"
+        (change)="selectGraph($event.target.value)">
+        <option *ngFor="let type of graphType">
+          {{type}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="col-sm-8">
+      <button (click)="getDataForProductAndRecipe()" 
+        class="btn btn-primary"
+        [disabled]="repeaterCounter != -2">Draw</button>
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-12">
+  <hr id="execution-data-separator">
+</div>
+
+
+<div *ngIf="recipesData" class="col-sm-12" id="main-views-container">
+  <div id="table-view" *ngIf="showDivs[0]">
+    <table class="table table-bordered" 
+      id="execution-data-table"
+      *ngIf="recipesData.length > 0; else zeroData">
+      <thead>
+        <th>Date</th>
+        <th>Product Instance Id</th>
+        <th>Kpi Name</th>
+        <th>Kpi value</th>
+        <th>Kpi unit</th>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let ed of recipesData">
+          <tr *ngIf="getKpiByType(ed)">
+            <td>{{ed.registered | date :'MM/dd hh:mm:ss'}}</td>
+            <!-- td>{{ed.productInstanceId}}</td -->
+            <td>              
+              <span>
+                  <a (click)="goToRecipesPerProductInstance(ed.productInstanceId)">
+                      {{ed.productInstanceId}}
+                  </a>                                                                
+              </span>
+            </td>
+            <td *ngIf="getKpiByType(ed)">
+              {{getKpiByType(ed).name}}
+            </td>
+            <td *ngIf="getKpiByType(ed)">
+              {{getKpiByType(ed).value}}
+            </td>
+            <td *ngIf="getKpiByType(ed)">
+              {{getKpiByType(ed).unit}}
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="graph-view1" *ngIf="showDivs[1]">
+    <ngx-charts-line-chart 
+      *ngIf="(recipesData.length > 0); else zeroData"
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="graphData"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [autoScale]="autoScale">
+    </ngx-charts-line-chart>
+  </div>
+
+  <div id="graph-view2" *ngIf="showDivs[2]">
+    <ngx-charts-bar-vertical
+      *ngIf="recipesData.length > 0; else zeroData"
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="histogramData"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="false"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      (select)="onSelect($event)"
+      [roundDomains]=true>
+    </ngx-charts-bar-vertical>
+  </div>
+</div>
+
+<ng-template #zeroData>
+  <span class="label label-danger"
+    id="recipe-execution-data-error">
+    No data found for specified criteria. Try with another interval.
+  </span> 
+</ng-template>

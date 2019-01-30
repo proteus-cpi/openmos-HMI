@@ -1,0 +1,65 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <!--breadcrumbs
+                [callerType]="'subSystems'"
+                [callerId]="'subsystem'">
+            </breadcrumbs-->
+            <div id="triggered-recipes-list-page-block">
+                <!-- order-instance-list
+                    [callerType]="callerType"
+                    [callerId]="callerId">
+                </order-instance-list -->
+                <div *ngIf="triggeredRecipes">
+                    <div *ngIf="triggeredRecipes.length == 0">
+                        Recipe never triggered.
+                    </div>                        
+                    <div *ngIf="triggeredRecipes.length == 1">
+                        Found 1 recipe-triggered operation.
+                    </div>                        
+                    <div *ngIf="triggeredRecipes.length > 1">
+                        Found {{triggeredRecipes.length}} recipe-triggered operations.
+                    </div>                        
+                
+                    <div class="table-responsive">
+                        <table *ngIf="triggeredRecipes && triggeredRecipes.length > 0"
+                            class="table table-hover rable-striped">
+                            <thead>
+                                <tr>
+                                    <th>USER</th>
+                                    <th>DATE</th>
+                                    <th>SUCCESS</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let triggeredRecipe of triggeredRecipes; let i = index">
+                                    <td>{{triggeredRecipe.userName}}</td>
+                                    <td>{{triggeredRecipe.registered | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td>{{triggeredRecipe.successfully}}</td>
+                                    <td>
+                                        <button 
+                                            *ngIf=" triggeredRecipe.successfully"
+                                            class="btn btn-primary btn-sm"
+                                            (click)="goToTriggerRecipeView(triggeredRecipe)">
+                                            Execution KPIs
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                </div>
+                
+                <ng-template #noData>No recipe-triggered operations found.</ng-template>                
+            </div>
+        </div>
+    </div>
+</div>   
+<!-->
+<bottom-footer 
+[whereAmIContext]="'triggeredRecipes'" 
+[whereAmISubContext]="" 
+[whereAmIElement]="">
+</bottom-footer>-->

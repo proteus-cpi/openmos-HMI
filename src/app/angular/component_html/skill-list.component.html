@@ -1,0 +1,157 @@
+<!-- div *ngIf="skills && isSubSystem" -->
+<div *ngIf="isSubSystem">
+    <div *ngIf="skills; else noData">
+                <ul class="treeview">
+        <li>
+            <h3 *ngIf="showSubModules">{{callerTypeToBePrinted }} {{subSystemNameToPrint}}</h3>
+
+            <div id="skill-counter-label">
+                <span *ngIf="skills.length == 0 && subSystemNameToPrint">
+                    No skills found for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+                </span>                        
+                <span *ngIf="skills.length == 1 && subSystemNameToPrint">
+                    Found 1 skill for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+                </span>                        
+                <span *ngIf="skills.length > 1 && subSystemNameToPrint">
+                    Found {{skills.length}} skills for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+                </span>  
+                <span class="glyphicon glyphicon-list-alt"
+                    data-toggle="tooltip"
+                    title="Go to full list"
+                    (click)="goToFullList()"
+                    *ngIf="!showSubModules"></span>
+            </div>
+
+            <div class="table-responsive">
+                <table *ngIf="skills.length > 0" 
+                    class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <!-- <th>SKILL ID</th> -->
+                            <th>SKILL NAME</th>
+                            <th>SKILL TYPE</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let skill of skills; let i = index">
+                            <!-- <td>{{skill.uniqueId}}</td> -->
+                            <td>{{skill.name}}</td>
+                            <td>{{skill.type}}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm"
+                                    (click)="goToSkillDetails(skill)">
+                                    Skill details
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm"
+                                    (click)="goToAvailableRecipes(skill)">
+                                    Available Recipes
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm"
+                                    (click)="goToAddNewRecipeSkill(skill)">
+                                    Add new recipe
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </li>
+
+        <!-- li *ngIf="subSystem && showSubModules
+            && subSystem.internalModules
+            && subSystem.internalModules.length > 0">
+            <ul>
+                <ng-container *ngFor="let module of subSystem.internalModules">
+                    <li *ngIf="module.uniqueId && module.skills && module.skills.length > 0">
+                        <skill-list
+                            [callerType]="'module'"
+                            [callerId]="getUrlForSubModules(module.uniqueId)">
+                        </skill-list>
+                        <hr/>
+                    </li>
+                </ng-container>
+            </ul>
+        </li -->
+
+        <li *ngIf="showSubModules
+        && modules
+        && modules.length > 0">
+        <ul>
+            <ng-container *ngFor="let module of modules">
+                <li *ngIf="module.uniqueId && module.skills && module.skills.length > 0">
+                    <skill-list
+                        [callerType]="'module'"
+                        [callerId]="getUrlForSubModules(module.uniqueId)">
+                    </skill-list>
+                    <hr/>
+                </li>
+            </ng-container>
+        </ul>
+    </li>
+
+    </ul>
+    </div>
+</div>
+
+<!-- div *ngIf="skills && !isSubSystem" -->
+<div *ngIf="!isSubSystem">
+    <div *ngIf="skills; else noData">
+    <h3>{{callerTypeToBePrinted}} {{subSystemNameToPrint}}</h3>
+    <div *ngIf="skills.length == 0 && subSystemNameToPrint">
+        No skills found for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+    </div>                        
+    <div *ngIf="skills.length == 1 && subSystemNameToPrint">
+        Found 1 skill for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+    </div>                        
+    <div *ngIf="skills.length > 1 && subSystemNameToPrint">
+        Found {{skills.length}} skills for {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+    </div>  
+    <div class="table-responsive">
+        <table *ngIf="skills.length > 0" 
+            class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <!-- <th>SKILL ID</th> -->
+                    <th>SKILL NAME</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let skill of skills; let i = index">
+                    <!-- <td>{{skill.uniqueId}}</td> -->
+                    <td>{{skill.name}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"
+                            (click)="goToSkillDetails(skill)">
+                            Skill details
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"
+                            (click)="goToAvailableRecipes(skill)">
+                            Available Recipes
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"
+                            (click)="goToAddNewRecipeSkill(skill)">
+                            Add new recipe
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+
+<ng-template #noData>No skills found<!-- for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}--></ng-template>

@@ -1,0 +1,423 @@
+<div *ngIf="showInsertForm"
+    id="add-new-recipe-form">
+    <h3>Add new recipe skill</h3>
+    
+    <!--<label *ngIf="callerSkill">
+        For Skill: {{callerSkill.name}}
+    </label>-->
+
+    <div class="col-sm-12">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="recipe-id" *ngIf="recipeToInsert">Unique Id</label>
+                <br/>
+                <span id="recipe-id" 
+                    *ngIf="recipeToInsert">
+                    {{recipeToInsert.uniqueId}}
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="recipe-skill">Skill</label>    
+                <br/>
+                <span id="recipe-skill"
+                    *ngIf="recipeToInsert">
+                    {{recipeToInsert.skill.name}} - {{recipeToInsert.skill.uniqueId}} - {{recipeToInsert.skill.skType}} skill
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="recipe-equipment">Equipment</label>
+                <br/>
+                <span id="recipe-equipment" 
+                    *ngIf="recipeToInsert  && !subSystemNameToPrint">
+                    {{recipeToInsert.equipmentId}}
+                </span>
+                <span *ngIf="recipeToInsert && subSystemNameToPrint">
+                    {{subSystemNameToPrint}}
+                </span>
+            </div>
+        </div>        
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label>Registered</label>
+                <br/>
+                <span *ngIf="recipeToInsert">
+                    {{recipeToInsert.registered | date:'dd/MM/yyyy'}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-name" *ngIf="recipeToInsert">Name</label>
+                <input id="recipe-name" 
+                    class="form-control"
+                    *ngIf="recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.name"/>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-descr">Description</label>
+                <input id="recipe-descr" 
+                    class="form-control"
+                    *ngIf="recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.description"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-valid">Valid</label>
+                <select id="recipe-valid" 
+                    class="form-control"
+                    *ngIf="recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.valid">
+                    <option value="{{true}}">True</option>
+                    <option value="{{false}}">False</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <!--<div class="form-group">
+                <label for="recipe-control-port">Executed By Skill Control Port: </label>
+                <select id="recipe-control-port" 
+                    class="form-control"
+                    *ngIf="callerSkill && recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.executedBySkillControlPort">
+                    <option *ngFor="let port of callerSkill.controlPorts"
+                        [ngValue]="port">
+                        {{port.uniqueId}} - {{port.name}} - {{port.description}}
+                    </option>
+                </select>
+            </div>-->
+            <!--<div class="form-group">
+                <label for="recipe-optimized">Optimized</label>
+                <select id="recipe-optimized" 
+                    class="form-control"
+                    [(ngModel)]="recipeToInsert.optimized"
+                    *ngIf="recipeToInsert">
+                    <option value="{{true}}">True</option>
+                    <option value="{{false}}">False</option>
+                </select>
+            </div>-->
+        </div>
+    </div>
+    
+    <!--
+    <div class="col-sm-12">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-control-port">Executed By Skill Control Port: </label>
+                <select id="recipe-control-port" 
+                    class="form-control"
+                    *ngIf="callerSkill && recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.executedBySkillControlPort">
+                    <option *ngFor="let port of callerSkill.controlPorts"
+                        [ngValue]="port">
+                        {{port.uniqueId}} - {{port.name}} - {{port.description}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-agent-name">Unique Agent Name</label>
+                <input id="recipe-agent-name" 
+                    class="form-control"
+                    *ngIf="recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.uniqueAgentName"/>
+            </div>
+        </div>
+    </div> -->
+
+    <!--
+    <div class="col-sm-12">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-opt-date">Last Optimization Time</label>
+                <input id="recipe-opt-date" 
+                    class="form-control"
+                    type="date" 
+                    *ngIf="recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.lastOptimizationTime"/>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="recipe-endpoint">MSB Protocol EndPoint</label>
+                <input id="recipe-endpoint"
+                    class="form-control" 
+                    *ngIf="recipeToInsert" 
+                    [(ngModel)]="recipeToInsert.msbProtocolEndpoint"/>
+            </div>
+        </div>
+    </div>-->
+   
+    <div class="col-sm-12">
+            <hr/>
+    </div>
+
+    <div class="col-sm-12">
+        <label>Skill requirements fullfilled by recipe</label>
+    
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" *ngFor="let product of avaibleProducts; let i = index">
+                    <a href="#div{{i}}" aria-controls="div{{i}" role="tab" [ngClass]="{'active': i == 0}" data-toggle="tab">
+                        {{product.name}}
+                    </a>
+                </li>
+            </ul>
+            <br/>
+            <div class="tab-content">
+                <div *ngFor="let product of avaibleProducts; let i = index" 
+                    id="div{{i}}" 
+                    role="tabpanel" 
+                    class="tab-pane" 
+                    [ngClass]="{'active': i == 0}">
+    
+                    <div class="table-responsive" *ngIf="newSelectedSkillRequirements">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <th>SKILL REQUIREMENT ID</th>
+                                <th>NAME</th>
+                                <th>SELECT</th>
+                                <!--<th>INDEX TEST</th>-->
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let skillReq of product.skillRequirements; let x = index">
+                                    <td>
+                                        {{skillReq.uniqueId}}
+                                    </td>
+                                    <td>
+                                        {{skillReq.name}}
+                                    </td>
+                                    <td>
+                                        <!-- input type="checkbox" [(ngModel)]="selectedSkillRequirements[
+                                                        i > 0 ? 
+                                                        x + avaibleProducts[i - 1].skillRequirements.length
+                                                        : x
+                                                        ]" / -->
+                                        <input type="checkbox" [(ngModel)]="newSelectedSkillRequirements[i][x]" />
+                                    </td>
+                                    <!--<td>
+                                            {{i > 0 ? 
+                                                x + avaibleProducts[i - 1].skillRequirements.length
+                                                : x
+                                            }}
+                                        </td>-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+    
+    <div class="col-sm-12">
+        <hr/>
+    </div>
+
+    <!-- div class="col-sm-12">
+            <label>Skill requirements CHANGE SECTION TITLE - {{recipeToInsert.skill.name}} - {{recipeToInsert.skill.skillRequirements.length}} </label>
+        
+            <div>
+                <br/>
+                <div class="tab-content">
+                    <div *ngIf="recipeToInsert && recipeToInsert.skill && recipeToInsert.skill.skillRequirements"
+                        id="div_skillreqs" 
+                        role="tabpanel" 
+                        class="tab-pane" 
+                        [ngClass]="active">
+        
+                        <div class="table-responsive" *ngIf="recipeToInsert">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <th>SKILL REQUIREMENT NAME</th>
+                                    <th>RECIPES</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let skillReq of this.recipeToInsert.skill.skillRequirements; let x = index">
+                                        <td>
+                                            {{skillReq.name}}
+                                        </td>
+                                        <td>COMBO
+                                            
+                                            < ! - - input type="checkbox" [(ngModel)]="newSelectedSkillRequirements[i][x]" / - - >
+                                        </td>
+                                        < ! - - <td>
+                                                {{i > 0 ? 
+                                                    x + avaibleProducts[i - 1].skillRequirements.length
+                                                    : x
+                                                }}
+                                            </td> -  ->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>    
+
+    <div class="col-sm-12">
+            <hr/>
+        </div -->
+
+    <div class="col-sm-12"
+        *ngIf="(recipeToInsert && recipeToInsert.skill && recipeToInsert.skill.skType  && recipeToInsert.skill.skType == 'COMPOSITE'
+            && recipeToInsert.skill.skillRequirements && recipeToInsert.skill.skillRequirements.length > 0); else noSkReqs2">
+        <label>Skill Requirements for the execution of this recipe</label>
+        <div class="table-responsive">
+            <table *ngIf="(recipeToInsert && recipeToInsert.skillRequirements && recipeToInsert.skill.skillRequirements.length > 0); else noSkReqs2"
+                class="table table-striped table-hover">
+                <thead>
+                    <th>#</th>
+                    <th>SK REQ</th>
+                    <th>RECIPES</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let sqreq of recipeToInsert.skillRequirements; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{sqreq.name}}</td>
+                        <td>
+                            <div *ngIf="sqreq.selectedRecipesIds && sqreq.selectedRecipesIds.length > 0">
+                                <span *ngFor="let r of sqreq.selectedRecipesIds; let z = index"
+                                    [ngClass]="{ 'recipe-select' : z != 0 }">
+                                    <input type="checkbox"
+                                        (change)="onChangeRecipe($event, sqreq)"
+                                        id="sqreq_{{r.recipe}}_{{z}}" 
+                                        [disabled]="sqreq.selectedRecipesIds.length == 1"
+                                        [(ngModel)]="sqreq.selectedRecipesIds[z].selected"/>
+                                    <label for="sqreq_{{r.recipe}}_{{z}}">{{getRecipeName(r.recipe)}}</label>
+                                </span>    
+                            </div>                                        
+                            <span *ngIf="sqreq.isError" class="label label-danger" id="sk_{{sqreq.uniqueId}}">
+                                Select at least one recipe
+                            </span>
+                        </td>                                                
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noSkReqs2>
+            <br/>
+            No SQREQ2 available from Skill
+        </ng-template>
+    </div>
+        
+    <div class="col-sm-12"> 
+        <hr/>
+    </div>
+                
+    <div class="col-sm-12">
+        <label>Kpi Forecast</label>
+        <div class="table-responsive">
+            <table *ngIf="(recipeToInsert && recipeToInsert.kpiSettings && recipeToInsert.kpiSettings.length > 0); else noKpiSetting"
+                class="table table-striped table-hover">
+                <thead>
+                    <th>#</th>
+                    <th>NAME</th>
+                    <th>DESCRIPTION</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let kpisett of recipeToInsert.kpiSettings; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{kpisett.uniqueId}}</td>
+                        <td>{{kpisett.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noKpiSetting>
+            <br/>
+            No KPI Settings available from Skill
+        </ng-template>
+    </div>
+
+    <div class="col-sm-12">
+        <hr/>
+    </div>
+
+    <div class="col-sm-12">
+        <label>Parameter Settings</label>
+        <div class="table-responsive">
+            <table *ngIf="(recipeToInsert && recipeToInsert.parameterSettings && recipeToInsert.parameterSettings.length > 0); else noParameterSetting"
+                class="table table-striped table-hover">
+                <thead>
+                    <th>#</th>
+                    <th>NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>PARAMETER</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let paramSett of recipeToInsert.parameterSettings; let i = index">
+                        <td>
+                            {{i}}
+                        </td>
+                        <td>
+                            {{paramSett.uniqueId}}
+                        </td>
+                        <td>
+                            {{paramSett.name}}
+                        </td>
+                        <td>
+                            {{paramSett.parameter.name}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noParameterSetting>
+            <br/>
+            No Parameter Setting available from Skill
+            <br/>
+        </ng-template>       
+    </div>
+
+    <div class="col-sm-12">
+        <hr/> 
+    </div>
+    
+    <div class="col-sm-12">
+        <accept-condition></accept-condition>
+        <div data-toggle="tooltip"
+            title="Accept conditions"
+            id="confirm-div"
+            class="confirm-div-button">
+            <button class="btn btn-primary"
+                (click)="insertRecipe()"
+                disabled
+                id="insert-button"
+                button-type="confirm">
+                INSERT
+            </button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!showInsertForm">
+   <h3>
+       Recipe for Skill: {{recipeToInsert.skill.name}} 
+       correctly inserted
+   </h3>
+   <br/>
+   <a href="/subSystems">Go to System Overview</a>
+   <br/>
+   <a (click)="goToRecipeList()">Go to Recipe List</a>
+   <br/>
+   <a (click)="newInsert()">
+       Insert new recipe for Skill: {{callerSkill.name}}
+   </a>
+</div>

@@ -1,0 +1,48 @@
+<h2>Workstation View (Slide 6)</h2>
+<div *ngIf="selectedSubSystem; else test">
+    <label>WS ID: </label>
+    <input [(ngModel)]="selectedSubSystem.uniqueId"/>
+    {{selectedSubSystem.uniqueId}}
+    <br/>
+    <br/>
+
+    <h2>Execution Table</h2>
+    <execution-table 
+        [executionTableId]="selectedSubSystem.executionTable.uniqueId"
+        (click)="goToExecutionTable()">
+    </execution-table>
+    
+    <div>
+        <h2>MODULES</h2>
+        <module-list
+            [callerElement]="selectedSubSystem.uniqueId">
+        </module-list>
+    </div>
+    
+    <div>
+        <h2>SKILLS</h2>
+        <skill-list
+            [callerElement]="selectedSubSystem.uniqueId">
+        </skill-list>
+    </div>
+    
+    <div>
+        <h2>RECIPES</h2>
+        <recipe-list
+            [callerComponent]="selectedSubSystem.uniqueId">
+        </recipe-list>
+<!--        {{selectedSubSystem.recipes | json}} -->
+    </div>
+    
+    <div>
+        <h2>PHYSICAL LOCATION</h2>
+        {{selectedSubSystem.physicalLocation | json}}
+    </div>
+    
+    <div>
+        <h2>LOGICAL LOCATION</h2>
+        {{selectedSubSystem.logicalLocation | json}}
+    </div>
+</div>
+
+<ng-template #test>No data to show!!</ng-template>

@@ -1,0 +1,522 @@
+<div *ngIf="recipe; else noData" id="recipe-detail-container" class="col-sm-12">
+    <breadcrumbs [callerType]="callerType" [callerId]="callerId" [actualObject]="recipe">
+    </breadcrumbs>
+
+    <div id="errors-div">
+        <span>
+            {{this.errorMessage}}
+        </span>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div id="recipe-detail-title">
+                <h3>
+                    DETAIL OF RECIPE {{this.recipe.name}}
+                    <span class="label label-success" *ngIf="recipe.valid">
+                        {{recipe.valid ? 'Valid' : 'Not valid'}}
+                    </span>
+
+                    <span class="label label-danger" *ngIf="!recipe.valid">
+                        {{recipe.valid ? 'Valid' : 'Not valid'}}
+                    </span>
+                </h3>
+
+                <h4>Associated to skill "{{this.recipe.skill.name}}"</h4>
+            </div>
+            <div>
+                <div class="col-sm-3" id="recipes-buttons">
+                    <button class="btn btn-primary btn-lg btn-block" (click)="changeView(4)" full-text="Main properties" short-text="Props" title="Main properties">Main properties</button>
+                    <button class="btn btn-primary btn-lg btn-block" (click)="changeView(0)" full-text="Associated Parameter Settings" short-text="Param"
+                        title="Parameter Settings">Associated Parameter Settings</button>
+                    <button class="btn btn-primary btn-lg btn-block" (click)="changeView(1)" full-text="Associated Skill Requirement" short-text="Skill R"
+                        title="Skill Requirement">Associated Skill Requirement</button>
+                    <button class="btn btn-primary btn-lg btn-block" (click)="changeView(2)" full-text="Associated Control Port" short-text="Ports"
+                        title="Control Port">Associated Control Port</button>
+                    <button class="btn btn-primary btn-lg btn-block" (click)="changeView(3)" full-text="KPI Forecast" short-text="KPI" title="KPI Forecast">KPI Forecast</button>
+                    <button class="btn btn-warning btn-sm btn-block" (click)="showAllProperties()" full-text="Show All Properties" short-text="All props"
+                        title="All Properties">Show All Properties</button>
+                    <br/>
+                    <button class="btn btn-info btn-sm btn-block" (click)="changeView(5)" full-text="Execution Data History" short-text="History">Execution Data History</button>
+                    <button class="btn btn-info btn-sm btn-block" (click)="changeView(7)" full-text="Trigger history" short-text="Trig. story">Trigger History</button>
+                    <br/>
+                    <br/>
+                    <span onclick="resizeRecipeView(this)" id="resize-recipe-button" class="glyphicon glyphicon-circle-arrow-left">
+                    </span>
+                </div>
+
+                <div class="col-sm-9" id="values-div">
+                    <div id="main-properties" *ngIf="showSelector[4]" class="sr-details col-sm-12">
+                        <h4>RECIPE PROPERTIES</h4>
+                        <div id="recipe-id-div" class="col-sm-6">
+                            <span>
+                                <label>Recipe Id: </label>
+                                <input type="text" class="form-control" [(ngModel)]="recipe.uniqueId" disabled/>
+                            </span>
+                        </div>
+
+                        <div id="recipe-name-div" class="col-sm-6">
+                            <span>
+                                <label>Recipe name: </label>
+                                <input type="text" class="form-control" [(ngModel)]="recipe.name" [(disabled)]="!isEditingProperties" />
+                            </span>
+                        </div>
+
+                        <div id="recipe-description-div" class="col-sm-6">
+                            <span>
+                                <label>Recipe description: </label>
+                                <input type="text" [(ngModel)]="recipe.description" class="form-control" [(disabled)]="!isEditingProperties" />
+                            </span>
+                        </div>
+
+                        <div id="recipe-state-div" class="col-sm-6">
+                            <div *ngIf="this.recipe.state">
+                                <span>
+                                    <label>Recipe state: </label>
+                                    <input type="text" class="form-control" [(ngModel)]="recipe.state" [(disabled)]="!isEditingProperties" />
+                                </span>
+                            </div>
+                            <div *ngIf="!this.recipe.state">
+                                <label>Recipe state: n/a</label>
+                            </div>
+                        </div>
+
+                        <div id="recipe-active-div" class="col-sm-6">
+                            <span>
+                                <label>Is valid: </label>
+                                <input type="checkbox" [(ngModel)]="recipe.valid" [(disabled)]="!isEditingProperties" />
+                            </span>
+
+                        </div>
+
+                        <div class="col-sm-12" id="recipe-editbtn-div">
+                            <button class="btn btn-primary" *ngIf="!isEditingProperties" (click)="editProperties(true)">
+                                Edit
+                            </button>
+                            <button class="btn btn-primary" (click)="triggerThisRecipe()">
+                                Trigger this recipe
+                            </button>
+                            <div id="loader-container" style="display: none;">
+                                <div class="loader"></div>
+                                Executing recipe
+                            </div>
+                            {{this.errorMessage}} {{this.triggerResponse}}
+                            <button class="btn btn-primary" *ngIf="wasTriggered && wasTriggeredSuccessfully" (click)="triggeringResults()">
+                                Triggering results
+                            </button>
+
+                            <accept-condition *ngIf="isEditingProperties">
+                            </accept-condition>
+                            <div data-toggle="tooltip" title="Accept conditions" id="confirm-div" class="confirm-div-button">
+                                <button class="btn btn-success" disabled button-type="confirm" *ngIf="isEditingProperties" (click)="editProperties(false)">
+                                    Save
+                                </button>
+                            </div>
+                            <button class="btn btn-danger" *ngIf="isEditingProperties" (click)="cancelPropertiesModifications()">
+                                Cancel Modifications
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="parameterSettings" *ngIf="showSelector[0]" class="sr-details col-sm-12">
+                        <h4>PARAMETER SETTINGS</h4>
+                        <div *ngIf="this.recipe.parameterSettings; else noParameterSettingsData">
+                            <div *ngIf="this.recipe.parameterSettings.length == 0">
+                                No parameter settings found.
+                            </div>
+                            <div *ngIf="this.recipe.parameterSettings.length == 1">
+                                Found 1 parameter setting.
+                            </div>
+                            <div *ngIf="this.recipe.parameterSettings.length > 1">
+                                Found {{this.recipe.parameterSettings.length}} parameter settings.
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" *ngIf="recipe.parameterSettings.length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>NAME</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>VALUE</th>
+                                            <th>PARAMETER</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!isEditingParameterSetting">
+                                        <tr *ngFor="let parameterSetting of this.recipe.parameterSettings; let i = index">
+                                            <td>{{parameterSetting.uniqueId}}</td>
+                                            <td>{{parameterSetting.name}}</td>
+                                            <td>{{parameterSetting.description}}</td>
+                                            <td>{{parameterSetting.value}}</td>
+                                            <td>{{parameterSetting.parameter != null ? parameterSetting.parameter.name : ''}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="isEditingParameterSetting">
+                                        <tr *ngFor="let parameterSetting of this.recipe.parameterSettings">
+                                            <td>{{parameterSetting.uniqueId}}</td>
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="parameterSetting.name" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="parameterSetting.description" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="parameterSetting.value" />
+                                            </td>
+                                            <td>
+                                                {{parameterSetting.parameter != null ? parameterSetting.parameter.name : ''}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-primary" *ngIf="!isEditingParameterSetting && recipe.parameterSettings.length > 0" (click)="editParamSetting(true)">
+                                Edit Parameter Settings
+                            </button>
+
+                            <accept-condition *ngIf="isEditingParameterSetting">
+                            </accept-condition>
+                            <div data-toggle="tooltip" title="Accept conditions" id="confirm-div" class="confirm-div-button">
+                                <button class="btn btn-success" disabled button-type="confirm" *ngIf="isEditingParameterSetting" (click)="editParamSetting(false)">
+                                    Save
+                                </button>
+                            </div>
+                            <button class="btn btn-danger" *ngIf="isEditingParameterSetting" (click)="cancelParameterSettingModification()">
+                                Cancel Modifications
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="skillRequirements" *ngIf="showSelector[1]" class="sr-details col-sm-12">
+                        <div>
+                            <h4>SKILL REQUIREMENTS for the execution of this recipe</h4>
+                            <div *ngIf="this.recipe.skillRequirements; else noSkillRequirementsData">
+                                <div *ngIf="this.recipe.skillRequirements.length == 0">
+                                    No skill requirements found.
+                                </div>
+                                <div *ngIf="this.recipe.skillRequirements.length == 1">
+                                    Found 1 skill requirement.
+                                </div>
+                                <div *ngIf="this.recipe.skillRequirements.length > 1">
+                                    Found {{this.recipe.skillRequirements.length}} skill requirements.
+                                </div>
+                                <br/>
+                                <!-- skill reqs executed by the recipe - begin -->
+                                <div *ngIf="isEditingSkillReq && recipe.skillRequirements.length > 0" class="table-responsive">
+                                    <table *ngIf="(recipe && recipe.skillRequirements && recipe.skill.skillRequirements.length > 0); else noSkReqs2" class="table table-striped table-hover">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>SK REQ</th>
+                                            <th>RECIPES</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let sqreq of recipe.skillRequirements; let i = index">
+                                                <td>{{i + 1}}</td>
+                                                <td>{{sqreq.name}}</td>
+                                                <td>
+                                                    <!-- {{sqreq | json}} -->
+                                                    <div *ngIf="sqreq.selectedRecipesIds && sqreq.selectedRecipesIds.length > 0">
+                                                        <span *ngFor="let r of sqreq.selectedRecipesIds; let z = index" [ngClass]="{ 'recipe-select' : z != 0 }">
+                                                            <input type="checkbox" (change)="onChangeRecipe($event, sqreq)" id="sqreq_{{r.recipe}}_{{z}}" [disabled]="sqreq.selectedRecipesIds.length == 1"
+                                                                [(ngModel)]="sqreq.selectedRecipesIds[z].selected" />
+                                                            <label for="sqreq_{{r.recipe}}_{{z}}">{{getRecipeName(r.recipe)}}</label>
+                                                        </span>
+                                                    </div>
+                                                    <span *ngIf="sqreq.isError" class="label label-danger" id="sk_{{sqreq.uniqueId}}">
+                                                        Select at least one recipe
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- skill reqs executed by the recipe - end -->
+                                <div *ngIf="!isEditingSkillReq && recipe.skillRequirements.length > 0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped">
+                                            <thead>
+                                                <th>ID</th>
+                                                <th>NAME</th>
+                                                <th>RECIPES</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let skillReq of recipe.skillRequirements">
+                                                    <td>
+                                                        {{skillReq.uniqueId}}
+                                                    </td>
+                                                    <td>
+                                                        {{skillReq.name}}
+                                                    </td>
+                                                    <td>
+                                                        <div *ngIf="skillReq.recipeIDs && skillReq.recipeIDs.length > 0">
+                                                            <span *ngFor="let r of skillReq.recipeIDs; let z = index">
+                                                                <label>{{getRecipeName(r)}}</label>
+                                                                <!-- label for="sqreq_{{r.recipe}}_{{z}}">{{getRecipeName(r.recipe)}}</label -->
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  -->
+                        </div>
+
+                        <!-- -->
+                        <div>
+                            <h4>SKILL REQUIREMENTS fulfilled by this recipe</h4>
+                            <div *ngIf="this.recipe.fulfilledSkillRequirements; else noFulfilledSkillRequirementsData">
+                                <div *ngIf="this.recipe.fulfilledSkillRequirements.length == 0">
+                                    No fulfilled skill requirements found.
+                                </div>
+                                <div *ngIf="this.recipe.fulfilledSkillRequirements.length == 1">
+                                    Found 1 fulfilled skill requirement.
+                                </div>
+                                <div *ngIf="this.recipe.fulfilledSkillRequirements.length > 1">
+                                    Found {{this.recipe.fulfilledSkillRequirements.length}} fulfilled skill requirements.
+                                </div>
+                                <br/>
+
+                                <!-- fulfilled sk reqs chance 2 - begin -->
+                                <!-- div *ngIf="isEditingSkillReq && recipe.fulfilledSkillRequirements && recipe.fulfilledSkillRequirements.length > 0" class="col-sm-12" -->
+                                <div *ngIf="isEditingSkillReq && avaibleProducts && avaibleProducts.length > 0 " class="col-sm-12">
+
+                                    <div>
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li role="presentation" *ngFor="let product of avaibleProducts; let i = index">
+                                                <a href="#div{{i}}" aria-controls="div{{i}" role="tab" [ngClass]="{'active': i == 0}" data-toggle="tab">
+                                                    {{product.name}} ({{traceSkReqCountPerProduct[i]}})
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <br/>
+                                        <div class="tab-content">
+                                            <div *ngFor="let product of avaibleProducts; let i = index" id="div{{i}}" role="tabpanel" class="tab-pane" [ngClass]="{'active': i == 0}">
+
+                                                <div class="table-responsive" *ngIf="newSelectedSkillRequirements">
+                                                    <table class="table table-hover table-bordered">
+                                                        <thead>
+                                                            <th>SKILL REQUIREMENT NAME</th>
+                                                            <th>SELECT</th>
+                                                            <!--<th>INDEX TEST</th>-->
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let skillReq of product.skillRequirements; let x = index">
+                                                                <td>
+                                                                    <!--{{skillReq.uniqueId}} - -->{{skillReq.name}}
+                                                                </td>
+                                                                <td>
+                                                                    <input type="checkbox" [(ngModel)]="newSelectedSkillRequirements[i][x]" (ngModelChange)="updateTraceSkReqCountPerProduct()"
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- fulfilled sk reqs chance 2 - end -->
+                                <div *ngIf="!isEditingSkillReq && recipe.fulfilledSkillRequirements && recipe.fulfilledSkillRequirements.length > 0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped">
+                                            <thead>
+                                                <th>ID</th>
+                                                <th>NAME</th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let skillReq of recipe.fulfilledSkillRequirements">
+                                                    <td>
+                                                        {{skillReq.uniqueId}}
+                                                    </td>
+                                                    <td>
+                                                        {{skillReq.name}}
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- TODO qui tasto edit -->
+                        <button *ngIf="!isEditingSkillReq" (click)="editSkillReq()" class="btn btn-primary">
+                            Edit
+                        </button>
+
+                        <div *ngIf="isEditingSkillReq">
+                            <accept-condition *ngIf="isEditingSkillReq">
+                            </accept-condition>
+                            <div data-toggle="tooltip" title="Accept conditions" id="confirm-div" class="confirm-div-button">
+                                <button class="btn btn-success" disabled button-type="confirm" *ngIf="isEditingSkillReq" (click)="saveModification()">
+                                    Save
+                                </button>
+                            </div>
+                            <button class="btn btn-danger" (click)="cancelModification()" *ngIf="isEditingSkillReq">
+                                Cancel
+                            </button>
+                        </div>
+            </div>
+
+                    <div id="controlPort" *ngIf="showSelector[2]" class="sr-details col-sm-12">
+                        <h4>CONTROL PORT</h4>
+                        <div *ngIf="this.recipe.executedBySkillControlPort; else noControlPortData">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" *ngIf="recipe.executedBySkillControlPort">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>NAME</th>
+                                            <th>TYPE</th>
+                                            <th>DIRECTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{this.recipe.executedBySkillControlPort.uniqueId}}</td>
+                                            <td>{{this.recipe.executedBySkillControlPort.name}}</td>
+                                            <td>{{this.recipe.executedBySkillControlPort.type}}</td>
+                                            <td>{{this.recipe.executedBySkillControlPort.direction}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="kpiSettings" *ngIf="showSelector[3]" class="sr-details col-sm-12">
+                        <h4>KPI FORECAST</h4>
+                        <div *ngIf="this.recipe.kpiSettings; else noKPISettingsData">
+                            <div *ngIf="this.recipe.kpiSettings.length == 0">
+                                No kpi forecast found.
+                            </div>
+                            <div *ngIf="this.recipe.kpiSettings.length == 1">
+                                Found 1 kpi forecast.
+                            </div>
+                            <div *ngIf="this.recipe.kpiSettings.length > 1">
+                                Found {{this.recipe.kpiSettings.length}} kpi forecast.
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" *ngIf="recipe.kpiSettings.length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>NAME</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>KPI</th>
+                                            <!--th>TYPE</th-->
+                                            <th>UNIT</th>
+                                            <th>VALUE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!isEditingKpiSetting">
+                                        <tr *ngFor="let kpiSetting of this.recipe.kpiSettings; let i = index">
+                                            <td>{{kpiSetting.uniqueId}}</td>
+                                            <td>{{kpiSetting.name}}</td>
+                                            <td>{{kpiSetting.description}}</td>
+                                            <td>
+                                                <div *ngIf="kpiSetting.kpi; else noKpiSettingKpi">
+                                                    {{kpiSetting.kpi.name}}
+                                                </div>
+                                            </td>
+                                            <!-- <td>{{kpiSetting.type}}</td> -->
+                                            <td>{{kpiSetting.unit}}</td>
+                                            <td>{{kpiSetting.value}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="isEditingKpiSetting">
+                                        <tr *ngFor="let kpiSetting of recipe.kpiSettings; let i = index">
+                                            <td>{{kpiSetting.uniqueId}}</td>
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="kpiSetting.name" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="kpiSetting.description" />
+                                            </td>
+                                            <td>
+                                                <div *ngIf="kpiSetting.kpi; else noKpiSettingKpi">
+                                                    {{kpiSetting.kpi.name}}
+                                                </div>
+                                            </td>
+                                            <!--<td>
+                                                <input type="text"
+                                                    class="form-control"
+                                                    [(ngModel)]="kpiSetting.type"/>
+                                            </td> -->
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="kpiSetting.unit" />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" [(ngModel)]="kpiSetting.value" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--
+                            <button class="btn btn-primary"                        
+                                (click)="editKpiSetting(true)"
+                                *ngIf="!isEditingKpiSetting 
+                                && this.recipe.kpiSettings.length > 0">
+                                Modify KPI Forecast
+                            </button>
+                            -->
+                            <accept-condition *ngIf="isEditingKpiSetting">
+                            </accept-condition>
+                            <div data-toggle="tooltip" id="confirm-div" title="Accept conditions" class="confirm-div-button">
+                                <button class="btn btn-success" disabled button-type="confirm" (click)="editKpiSetting(false)" *ngIf="isEditingKpiSetting">
+                                    Save
+                                </button>
+                            </div>
+                            <button class="btn btn-danger" (click)="cancelKpiSettModification()" *ngIf="isEditingKpiSetting">
+                                Cancel modifications
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="execution-data-history" *ngIf="showSelector[5]" class="sr-details col-sm-12">
+                        <h4>RECIPE EXECUTION DATA</h4>
+                        <recipe-execution-data-graph [recipeId]="recipe.uniqueId">
+                        </recipe-execution-data-graph>
+                    </div>
+
+                    <div id="execution-data-history-product-recipe" *ngIf="showSelector[6]" class="sr-details col-sm-12">
+                        <h4>RECIPE EXECUTION DATA FOR PRODUCT AND RECIPE</h4>
+                        <recipe-execution-data-graph [recipeId]="recipe.uniqueId" [productInstanceId]="productInstanceId" [functionName]="'trg_recipe'">
+                        </recipe-execution-data-graph>
+                    </div>
+
+                    <div id="execution-data-history-product-recipe" *ngIf="showSelector[7]" class="sr-details col-sm-12">
+                        <h4>TRIGGER HISTORY</h4>
+                        <div class="col-sm-12">
+                            <triggered-recipes-list-page *ngIf="!showTriggerDetail" [recipeId]="recipe.uniqueId" (onDetail)="onTriggerDetail($event)">
+                            </triggered-recipes-list-page>
+                            <a *ngIf="showTriggerDetail" (click)="goToTriggerList()">
+                                Go back to list
+                            </a>
+                            <recipe-execution-data-graph *ngIf="showTriggerDetail" [recipeId]="recipe.uniqueId" [productInstanceId]="selectedTriggerProd"
+                                [functionName]="'trg_recipe'">
+                            </recipe-execution-data-graph>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<bottom-footer [whereAmIContext]="'skillRecipeView'" [whereAmIElement]="callerId"></bottom-footer>
+
+<ng-template #noData>Recipe not found.</ng-template>
+<ng-template #noParameterSettingsData>No parameter settings data found.</ng-template>
+<ng-template #noSkillRequirementsData>No skill requirements data found.</ng-template>
+<ng-template #noFulfilledSkillRequirementsData>No fulfilled skill requirements data found.</ng-template>
+<ng-template #noControlPortData>No control port data found.</ng-template>
+<ng-template #noKPISettingsData>No kpi settings data found.</ng-template>
+<ng-template #noKPISettingKpi>Missing kpi.</ng-template>

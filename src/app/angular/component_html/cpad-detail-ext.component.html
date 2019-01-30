@@ -1,0 +1,49 @@
+<h2>Workstation View (Slide 6)</h2>
+<div *ngIf="selectedCpad; else test">
+    <label>WS ID: </label>
+    <input [(ngModel)]="selectedCpad.equipmentId"/>
+    {{selectedCpad.equipmentId}}
+    <br/>
+    <br/>
+
+    <h2>Execution Table</h2>
+    <execution-table 
+        [executionTableId]="selectedCpad.executionTable.uniqueId"
+        (click)="goToExecutionTable()">
+    </execution-table>
+    
+    <div>
+        <h2>EQUIPMENTS</h2>
+        <equipment-list
+            [callerElement]="selectedCpad.equipmentId">
+        </equipment-list>
+<!--        {{selectedCpad.equipments | json}}  -->
+    </div>
+    
+    <div>
+        <h2>SKILLS</h2>
+        <skill-list
+            [callerElement]="selectedCpad.equipmentId">
+        </skill-list>
+    </div>
+    
+    <div>
+        <h2>RECIPES</h2>
+        <recipe-list
+            [callerComponent]="selectedCpad.equipmentId">
+        </recipe-list>
+<!--        {{selectedCpad.recipes | json}} -->
+    </div>
+    
+    <div>
+        <h2>PHYSICAL LOCATION</h2>
+        {{selectedCpad.physicalLocation | json}}
+    </div>
+    
+    <div>
+        <h2>LOGICAL LOCATION</h2>
+        {{selectedCpad.logicalLocation | json}}
+    </div>
+</div>
+
+<ng-template #test>No data to show!!</ng-template>

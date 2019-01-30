@@ -1,0 +1,22 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs
+                [callerType]="callerType"
+                [callerId]="callerId"
+            ></breadcrumbs>
+            <div id="skill-list-page-block">
+                <skill-list
+                    [callerType]="callerType"
+                    [callerId]="callerId">
+                </skill-list>
+            </div>
+        </div>
+    </div>
+</div>   
+
+<bottom-footer
+    [whereAmIContext]="callerType" 
+    [whereAmISubContext]="'skills'" 
+    [whereAmIElement]="callerId">
+</bottom-footer>

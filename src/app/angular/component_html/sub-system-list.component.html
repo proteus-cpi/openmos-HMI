@@ -1,0 +1,187 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+        <div id="errors-div">
+            <span>
+                    {{this.errorMessage}}            
+            </span>
+        </div>
+              
+      <div id="subSystems-list-block">
+        <h2>System Overview</h2>
+        
+        <div class="alert alert-warning update-alert-message" 
+          style="display: none;"
+          role="alert"
+          id="reload-message">
+          <span class="glyphicon glyphicon-refresh"></span>
+          <span>Refreshing SubSystems data, please wait</span>
+        </div>
+
+        <div id="scroller"
+          *ngIf="subSystems; else noData" 
+          class="box-overview-cont">
+          <div *ngFor="let subSystem of subSystems" class="box-overview" id="overview-div">
+            <a class="glyphicon glyphicon-share-alt open-new-tab" 
+              href="{{getModuleListUrl(subSystem)}}"
+              target="_blank"
+              data-toggle="tooltip"
+              data-placement="left"
+              title="Open in new tab">
+            </a>
+            <object-pretty-printer
+              [objectToPrint]="subSystem"
+              [objectIdentifier]="subSystem.uniqueId">
+            </object-pretty-printer>
+            <!-- span id="hover-content"
+              class="glyphicon glyphicon-info-sign"
+              (click)="formatObjectDetail(subSystem)"
+              data-toggle="modal" data-target="#myModal"></span -->
+            <!-- label (click)="goToSubSystemDetail(subSystem)" class="openmosLink" -->
+            <div id="{{subSystem.uniqueId}}"></div>
+            <button (click)="goToSubSystemDetail(subSystem)"
+              id="subSystem-name-button">
+              <b>{{subSystem.name}}</b>
+              <span class="label label-primary">
+                {{subSystem.status}}
+                <br/>
+                {{subSystem.stage}}
+              </span>
+              <!-- /label -->      
+            </button>      
+            <button (click)="goToModulesList(subSystem)">
+              Modules
+            </button>
+            <button (click)="goToSkillList(subSystem)">
+              Available Skills
+            </button>
+            <button (click)="goToRecipeList(subSystem)">
+              Available Skill Recipes
+            </button>
+            <button (click)="goToExecutionTable(subSystem)">
+              ExecutionTable
+            </button>
+          </div>
+          <!-- div>
+              <img src="assets/uruguay.jpg" width="210" height="210" />
+              BEST PENALTY EVER!
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/pFIZxSY2PeY?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div -->
+        </div>
+
+      <!-- div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 *ngIf="selectedSubSystem" class="modal-title" id="exampleModalLabel">
+                SubSystem: {{selectedSubSystem.uniqueId}}
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <pre>{{prettyJson}}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div -->
+      </div>
+
+      <div id="system-stage"
+        *ngIf="subSystems"
+        class="system-stage-div">
+        <span (click)="startUpdateStage()"
+        *ngIf="!isUpdatingStage"
+        class="{{systemStage | lowercase}}">
+        <!--data-toggle="tooltip"
+          title="Click to change stage"
+          data-placement="bottom"-->
+          <label>System stage: {{systemStage}}</label>
+          <!--<span class="glyphicon glyphicon-repeat"></span>-->
+        </span>
+        <span *ngIf="isUpdatingStage">
+          <label>New stage: </label>
+          <select class="form-control"
+            [(ngModel)]="newSystemStage.stage"
+            style="display: inline-block;
+            width: 150px;">
+            <option *ngFor="let stage of possibleSystemStage">
+              {{stage}}
+            </option>
+          </select>
+          <button class="btn btn-primary" 
+            (click)="updateStage()">
+            Save
+          </button>
+          <button class="btn btn-danger"
+            (click)="cancelUpdateStage()">
+            Cancel
+          </button>
+        </span>
+      </div>
+
+      <!-- recommendations block -->
+      <br/>
+      <recommendations-list
+        [currentSubSystemsList]="this.subSystems" 
+      >
+      </recommendations-list>
+
+    </div>
+  </div>
+</div>
+
+<div id="assestWarningMessage" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-body">
+        <p>You need to assess the system before leaving RampUp stage</p>
+        
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-danger" data-dismiss="modal">
+              OK
+          </button>
+        </div>
+    </div>
+  </div>
+</div>
+<div id="intermediatePhaseMessage" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-body">
+      <p>You can't change stage while the system is in an intermediate stage</p>
+      
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">
+            OK
+        </button>
+      </div>
+  </div>
+</div>
+</div>
+
+<!-- USED TO CLEAR SESSION STORAGE - ONLY FOR TEST 
+  <input type="button"
+  value="CLEAR"
+  (click)="prova()"/> 
+-->
+
+<input type="button"
+  style="display: none;"
+  value="closeOpenModal()" 
+  id="close-button"
+  onclick="closeModals()"/>
+
+<ng-template #noData>No subsystems found into the system.</ng-template>
+
+<bottom-footer 
+  [whereAmIContext]="'subSystems'" 
+  [whereAmISubContext]="" 
+  [whereAmIElement]="">
+</bottom-footer>

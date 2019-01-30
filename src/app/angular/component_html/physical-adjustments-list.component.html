@@ -1,0 +1,88 @@
+<breadcrumbs
+[callerType]="openmosContext"
+[callerId]="openmosTarget"
+></breadcrumbs>
+
+<div *ngIf="physicalAdjustments; else noData">
+    <h3>Physical adjustments list</h3>
+    <div *ngIf="physicalAdjustments.length == 0">
+        No physical adjustments found
+    </div>                        
+    <div *ngIf="physicalAdjustments.length == 1">
+        Found 1 physical adjustment
+    </div>                        
+    <div *ngIf="physicalAdjustments.length > 1">
+        Found {{physicalAdjustments.length}} physical adjustments
+    </div>  
+    <div class="table-responsive">
+        <table *ngIf="physicalAdjustments.length > 0" 
+            class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <!-- <th>SKILL ID</th> -->
+                    <th>PHYSICAL ADJUSTMENT</th>
+                    <th></th>
+                    <!-- th></th>
+                    <th></th -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let adjustment of physicalAdjustments; let i = index">
+                    <!-- <td>{{skill.uniqueId}}</td> -->
+                    <td width="50%">
+                        <label>Adjustment </label> created by {{adjustment.userName}} on {{adjustment.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for {{adjustment.equipmentType}} {{adjustment.equipmentName}}</b>
+                        <br/>
+                        <!-- label>User's comments: </label>
+                        {{adjustment.userText}}
+                        <br/ -->
+                        Adjustment of type {{adjustment.physicalAdjustmentType}}.
+                        <br/>
+                        System was in {{adjustment.systemStage}} stage.
+                    </td>
+                    <td width="50%">
+                        <div *ngIf="adjustment.physicalAdjustmentParameterSetting && adjustment.physicalAdjustmentParameterSetting.parameter">
+                            New value  {{adjustment.physicalAdjustmentParameterSetting.parameter.unit}} {{adjustment.physicalAdjustmentParameterSetting.value}} for parameter {{adjustment.physicalAdjustmentParameterSetting.parameter.name}}.
+                            <br/>
+                            Previous value was {{adjustment.physicalAdjustmentParameterSetting.parameter.unit}} {{adjustment.physicalAdjustmentParameterSetting.parameter.defaultValue}}
+                        </div>
+                        <div *ngIf="adjustment.physicalAdjustmentParameterSetting && !adjustment.physicalAdjustmentParameterSetting.parameter">
+                            New value {{adjustment.physicalAdjustmentParameterSetting.value}} but missing parameter definition.
+                            <!-- div class="col-sm-12">
+                                <span class="main-type-label-row">
+                                    <label>Main Type</label>
+                                </span>
+                                <span class="rating-label-row">
+                                    <label>Rating</label>
+                                </span>
+                            </div -->
+                            <!-- div class="col-sm-12" 
+                                *ngFor="let row of assessment.rows"
+                                class="rating-row">
+                                <span class="assessment-type-label">
+                                    {{row.earType}}
+                                </span>
+                                
+                                <span class="assessment-rating-input">
+                                    <input disabled="true" type="range" [(ngModel)]="row.rating" class="assessment-rating" />
+                                </span>
+                                
+                                <span class="assessment-rating-value">
+                                    {{row.rating}}
+                                </span>                   
+                            </div -->
+                            <!-- div class="col-sm-12 new-assessment-comments">
+                                <label>Equipment assessment user's comments </label>
+                                <br/>
+                                {{assessment.userText}}
+                                <br/>
+                                Assessment created by <b>{{assessment.userName}}</b> on <b>{{assessment.registered | date: 'yyyy-MM-dd HH:mm:ss'}}</b>. System was in {{assessment.systemStage}} stage.
+                            </div -->                
+                </div>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+<ng-template #noData>No physical adjustments found<!-- for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}--></ng-template>

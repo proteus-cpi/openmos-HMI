@@ -1,0 +1,74 @@
+<breadcrumbs
+[callerType]="openmosContext"
+[callerId]="openmosTarget"
+></breadcrumbs>
+
+<div *ngIf="equipmentObservations; else noData">
+    <div *ngIf="openmosTarget == 'all'">
+        <h3>Full equipment observations list</h3>
+    </div>
+    <div *ngIf="openmosTarget == 'system'">
+        <h3>System observations list</h3>
+    </div>
+    <div *ngIf="openmosTarget != 'system' && openmosTarget != 'all' ">
+        <h3>Equipment observations list</h3>
+    </div>
+    <div *ngIf="equipmentObservations.length == 0">
+        No equipment observations found
+    </div>                        
+    <div *ngIf="equipmentObservations.length == 1">
+        Found 1 equipment observation
+    </div>                        
+    <div *ngIf="equipmentObservations.length > 1">
+        Found {{equipmentObservations.length}} equipment observations
+    </div>  
+    <div class="table-responsive">
+        <table *ngIf="equipmentObservations.length > 0" 
+            class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>EQUIPMENT OBSERVATION</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let equipmentObservation of equipmentObservations; let i = index">
+                    <td *ngIf="equipmentObservation.equipmentType=='subSystems'" width="50%">
+                        <label>Equipment observation </label> created by {{equipmentObservation.userName}} on {{equipmentObservation.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for the entire system</b>
+                        <br/>
+                        <label>User's comments: </label>
+                        {{equipmentObservation.userText}}
+                        <br/>
+                        System was in {{equipmentObservation.systemStage}} stage.
+                    </td>
+                    <td *ngIf="equipmentObservation.equipmentType=='subSystem'" width="50%">
+                        <label>Equipment observation </label> created by {{equipmentObservation.userName}} on {{equipmentObservation.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for {{equipmentObservation.equipmentType}} {{equipmentObservation.equipmentName}}</b>
+                        <br/>
+                        <label>User's comments: </label>
+                        {{equipmentObservation.userText}}
+                        <br/>
+                        System was in {{equipmentObservation.systemStage}} stage.
+                    </td>
+                    <td width="50%">
+                        <div  >
+                            <div class="col-sm-12" 
+                                *ngFor="let row of equipmentObservation.rows"
+                                >
+                                <span class="assessment-type-label">
+                                    {{row.eorType}} - {{row.subtype}} - {{row.value}} {{row.unit}}
+                                </span>                                
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="buttons" *ngIf="openmosTarget != 'all' ">
+            <button class="btn btn-primary" (click)="startObservationAddition()">
+                Add observation
+            </button>
+        </div>
+    </div>
+</div>
+
+<ng-template #noData>No equipment observations found</ng-template>

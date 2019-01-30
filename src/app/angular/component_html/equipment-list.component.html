@@ -1,0 +1,31 @@
+<div *ngIf="equipments; else noData">
+    <h3>AVAILABLE equipments FOR {{callerType}} {{callerId}}</h3>
+        <div *ngFor="let equipment of equipments; let i = index">
+            <label>ID: {{equipment.uniqueId}}</label>
+            &nbsp;
+            <label>NAME: {{equipment.name}}</label>
+            &nbsp;
+            <label>DESCRIPTION: {{equipment.description}}</label>
+            &nbsp;
+            <label>TIMESTAMP: <span>{{equipment.registeredTimestamp | date:'medium'}}</span></label>
+            &nbsp;
+            <label>EXECUTION TABLE: {{equipment.executionTable}}</label>
+            <!-- button 
+                (click)="goToEquipments(equipment)">
+                Go to recipes
+            </button -->
+            &nbsp;
+      <button
+        (click)="goToSkillList(equipment)">
+        Available Skills
+      </button>
+            &nbsp;
+      <button
+        (click)="goToRecipeList(equipment)">
+        Available Skill Recipes
+      </button>
+            &nbsp;            
+    </div>
+</div>
+
+<ng-template #noData>No equipments found!</ng-template>

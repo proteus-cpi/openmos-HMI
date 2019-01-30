@@ -1,0 +1,205 @@
+<div class="container-fluid" *ngIf="showForm">
+    <div class="row" id="order-container">
+        <div class="col-sm-12" id="main-container">
+            <breadcrumbs [callerType]="'subSystems'" [callerId]="'subsystem'">
+            </breadcrumbs>
+            <div id="overlay" class="overlay"
+                style="display: none;">
+                <!-- onclick="removeOverlay()" -->
+            </div>
+            <h3>Add new order</h3>
+            <div class="form-group">
+                <label for="order-id">Order Id: </label>
+                <span>{{orderToInsert.uniqueId}}</span>
+                <!-- <span *ngIf="!orderToInsert.uniqueId"
+                    class="label label-danger"
+                    id="error-id">
+                    {{requiredFieldMessage}}
+                </span>        
+                <input id="order-id"
+                    class="form-control"
+                    type="text" 
+                    [(ngModel)]="orderToInsert.uniqueId"/> -->
+            </div>
+            <div class="form-group">
+                <label for="order-name">Order name</label>
+                <span *ngIf="!orderToInsert.name" class="label label-danger" id="error-name">
+                    {{requiredFieldMessage}}
+                </span>
+                <input id="order-name" class="form-control" type="text" [(ngModel)]="orderToInsert.name" />
+            </div>
+            <div class="form-group">
+                <label for="order-description">Order description</label>
+                <span *ngIf="!orderToInsert.description" id="error-description" class="label label-danger">
+                    {{requiredFieldMessage}}
+                </span>
+                <textarea id="order-description" class="form-control" [(ngModel)]="orderToInsert.description">
+                </textarea>
+            </div>
+            <div class="form-group">
+                <label for="order-priority">Order priority: </label>
+                <span *ngIf="!orderToInsert.priority" id="error-priority" class="label label-danger">
+                    {{requiredFieldMessage}}
+                </span>
+                <!-- <input id="order-priority" 
+                    class="form-control" type="number" 
+                    [(ngModel)]="orderToInsert.priority" min="1" /> -->
+
+                <select [(ngModel)]="orderToInsert.priority"
+                    class="form-control">
+                    <option *ngFor="let pr of priorityLabel; let i = index"
+                        value="{{i+1}}">
+                        {{pr}}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label>Products</label>
+                <table class="table table-responsive table-striped form-inline-table">
+                    <thead>
+                        <th>
+                            <strong>#</strong>
+                        </th>
+                        <th>
+                            <strong>Product</strong>
+                            <span *ngIf="!orderToInsert.description" id="error-description" class="label label-danger">
+                                {{requiredFieldMessage}}
+                            </span>
+                        </th>
+                        <th>
+                            <strong>Quantity</strong>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of orderLines; let i = index">
+                            <td>
+                                {{i}}
+                            </td>
+                            <td [ngClass]="{'red': !orderLines[i].productId}">
+                                <select class="form-control" [(ngModel)]="orderLines[i].productId"
+                                    onchange="splitScreen(this)">
+                                    <option *ngFor="let product of products" [ngValue]="product.uniqueId">
+                                        {{product.name}}
+                                    </option>
+                                    <option value="null">
+                                        Add new product
+                                    </option>
+                                </select>
+                            </td>
+                            <td [ngClass]="{'red': !orderLines[i].quantity}">
+                                <input class="form-control sel-number" type="number" [(ngModel)]="orderLines[i].quantity" min="1" />
+
+                                <div class="alert-cont">
+                                    <span (click)="removeLine(i)" class="glyphicon glyphicon-minus"></span>
+                                    <strong>Delete row</strong>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="new-cont" (click)="addNewLine()">
+                <!-- <span class="glyphicon glyphicon-plus"></span> -->
+                <label>
+                    <span class="glyphicon glyphicon-plus"></span> New row</label>
+            </div>
+            <br/>
+
+            <div name="t42advice">
+            <button class="btn btn-primary" 
+            enabled 
+            id="get-t42-advices" 
+            type="button" 
+            (click)="getT42Advices()">
+            Get advice
+            </button>
+            <br/>
+        <!-- div class="t-42-advice" *ngIf="t42Messages" -->
+        <div class="table-responsive">
+            <!-- class="label label-danger" -->
+                <!-- span *ngIf="t42AdviceMessage; else noT42Advice" >
+                    {{t42AdviceMessage}}
+                </span -->                
+                <table *ngIf="t42Messages" 
+                            class="table table-hover table-striped">
+
+                <!-- table -->
+                    <thead>
+                        <th>Product</th>
+                        <th>Advice</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t42Message of t42Messages; let i = index">
+                            <td>
+                                {{t42Message.productName}}
+                            </td>
+                            <td>
+                                {{t42Message.advice}}
+                            </td>
+                        </tr>              
+                    </tbody>
+                </table>
+                <br/>
+            </div>
+        </div>
+
+            <accept-condition></accept-condition>
+
+            <div data-toggle="tooltip" 
+                title="Accept conditions" 
+                id="confirm-div" 
+                class="confirm-div-button">
+                <button class="btn btn-primary" 
+                    disabled 
+                    id="insert-button" 
+                    button-type="confirm"
+                    type="submit" 
+                    (click)="insertOrder()">
+                    Insert order
+                </button>
+            </div>
+            <span *ngIf="showError" class="label label-danger">
+                {{errorMessage}}
+            </span>
+        </div>
+        
+        <div class="col-sm-0" id="add-new-prod">
+            <add-new-component 
+                [showGoToProductList]="false">
+            </add-new-component>
+            <br/>
+            <button (click)="loadProductsList()"
+                class="btn btn-success"
+                value="hide"
+                onclick="splitScreen(this)">
+                Go back to order
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="!showForm">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="alert alert-success" role="alert">
+                    Order inserted correctly
+                </div>
+                <div>
+                    <a (click)="gotoOrderInstancesList()">Click here to go to order instances list page</a>
+                    <br/>
+                    <a (click)="insertNewOrder()">Click here to insert a new order</a>
+                    <br/>
+                    <a (click)="goToSystemOverview()">Click here to go back to System Overview</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noT42Advice>No advice found.</ng-template>

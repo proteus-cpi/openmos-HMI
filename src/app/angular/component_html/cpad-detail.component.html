@@ -1,0 +1,88 @@
+<top-header></top-header>
+<left-menu></left-menu>
+<breadcrumbs
+    [callerType]="'cpads'"
+></breadcrumbs>
+<div id="cpad-detail-block">
+TYPE={{selectedCpad.type}}
+
+<div *ngIf="selectedCpad; else test">
+    <!-- just for tests, to remove - begin -->
+<ng-template [ngIf]="selectedCpad.type == 'CyberPhysicalAgentDescriptionType'">
+    <div>
+        <h2>Workstation View (Slide 6)</h2>
+    </div>
+</ng-template>    
+    <!-- just for tests, to remove - end -->
+<ng-template [ngIf]="selectedCpad.type == 'resource_df_service'">
+    <div>
+        <h2>Workstation View (Slide 6)</h2>
+    </div>
+</ng-template>    
+<ng-template [ngIf]="selectedCpad.type == 'transport_df_service'">
+    <div>
+        <h2>Transport View (Slide 7)</h2>
+    </div>
+</ng-template>    
+
+<label>IDENTIFIER: </label>
+    <!-- input [(ngModel)]="selectedCpad.equipmentId"/ -->
+    {{selectedCpad.equipmentId}}
+    <br/>
+    <br/>
+
+    <div>
+        <equipment-list
+            [callerType]="cpad"
+            [callerId]="selectedCpad.equipmentId">
+        </equipment-list>
+<!--        {{selectedCpad.equipments | json}}  -->
+    </div>
+
+    <br/>
+    <br/>
+
+    <!-- h2>Execution Table</h2 -->
+    <execution-table 
+        [executionTableId]="selectedCpad.executionTable.uniqueId"
+        (click)="goToExecutionTable()">
+    </execution-table>
+    
+    <br/>
+    <br/>
+<!--    
+    <div>
+        <h2>SKILLS</h2>
+        <skill-list
+            [callerElement]="selectedCpad.equipmentId">
+        </skill-list>
+    </div>
+    
+    <div>
+        <h2>RECIPES</h2>
+        <recipe-list
+            [callerComponent]="selectedCpad.equipmentId">
+        </recipe-list>
+    </div>
+    
+    <div>
+        <h2>PHYSICAL LOCATION</h2>
+        {{selectedCpad.physicalLocation | json}}
+    </div>
+    
+    <div>
+        <h2>LOGICAL LOCATION</h2>
+        {{selectedCpad.logicalLocation | json}}
+    </div>
+-->    
+</div>
+
+<ng-template #test>Requested cyberphysical object with id = {{this.cpadId} not found into the system</ng-template>
+
+</div>
+<button-toolbar 
+            [whereAmIContext]="'cpad'" 
+            [whereAmISubContext]="selectedCpad.type" 
+            [whereAmIElement]="selectedCpad.equipmentId"
+></button-toolbar>
+<bottom-footer></bottom-footer>

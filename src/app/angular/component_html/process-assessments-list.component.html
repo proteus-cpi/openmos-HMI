@@ -1,0 +1,79 @@
+<breadcrumbs
+[callerType]="openmosContext"
+[callerId]="openmosTarget"
+></breadcrumbs>
+
+<div *ngIf="processAssessments; else noData">
+    <h3>Process assessments list</h3>
+    <div *ngIf="processAssessments.length == 0">
+        No process assessments found
+    </div>                        
+    <div *ngIf="processAssessments.length == 1">
+        Found 1 process assessment
+    </div>                        
+    <div *ngIf="processAssessments.length > 1">
+        Found {{processAssessments.length}} process assessments
+    </div>  
+    <div class="table-responsive">
+        <table *ngIf="processAssessments.length > 0" 
+            class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>PROCESS ASSESSMENT</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let assessment of processAssessments; let i = index">
+                    <td width="50%">
+                        <div *ngIf="assessment.recipeId != null">
+                            <label>Assessment </label> created by {{assessment.userName}} on {{assessment.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for recipe {{assessment.recipeName}}</b> <b>of subSystem {{assessment.equipmentName}}</b>
+                        </div>
+                        <div *ngIf="assessment.skillId != null">
+                            <label>Assessment </label> created by {{assessment.userName}} on {{assessment.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for skill {{assessment.skillName}}</b> <b>of subSystem {{assessment.equipmentName}}</b>
+                        </div>
+                        <br/>
+                        <label>User's comments: </label>
+                        {{assessment.userText}}
+                        <br/>
+                        System was in {{assessment.systemStage}} stage.
+                    </td>
+                    <td width="50%">
+                        <div  >
+                            <div class="col-sm-12">
+                                <span class="main-type-label-row">
+                                    <label>Main Type</label>
+                                </span>
+                                <span class="rating-label-row">
+                                    <label>Rating</label>
+                                </span>
+                            </div>
+                            <div class="col-sm-12" 
+                                *ngFor="let row of assessment.rows"
+                                class="rating-row">
+                                <span class="assessment-type-label">
+                                    {{row.parType}}
+                                </span>
+                                
+                                <span class="assessment-rating-input">
+                                    <input disabled="true" type="range" [(ngModel)]="row.rating" class="assessment-rating" />
+                                </span>
+                                
+                                <span class="assessment-rating-value">
+                                    {{row.rating}}
+                                </span>                   
+                            </div>
+                </div>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="buttons" *ngIf="openmosTarget != 'all' ">
+            <button class="btn btn-primary" (click)="startAssessmentAddition()">
+                Add assessment
+            </button>
+        </div>    
+        </div>
+    </div>
+
+<ng-template #noData>No process assessments found<!-- for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}--></ng-template>

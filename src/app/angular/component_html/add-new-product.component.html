@@ -1,0 +1,51 @@
+<h3>Upload a new product definition into the system</h3>
+<h5>
+    You can upload a new product definition into the OpenMOS system via an AML file.
+</h5>
+<br/>
+<div id="upload-form" *ngIf="showForm">
+    <div class="input-group">
+        <label for="upload-file-product">Select the AML file to upload</label>
+        <input type="file" class="form-control" (change)="onFileChange($event)" id="upload-file-product" />
+        <br/>
+        <span *ngIf="showFileError">File format not supported, please upload an AML file. Try again.</span>
+        <br/>
+    </div>
+    <div>
+        <br/>
+        <br/>
+        <br/>
+        <input class="btn btn-primary" 
+            id="formSubmitButton" 
+            name="formSubmitButton" 
+            [disabled]="this.buttonDisabled" 
+            type="submit" 
+            value="Upload selected file" 
+            (click)="submitForm()"/>
+        
+        <div id="loader-container" style="display: none;">
+            <div class="loader"></div>
+            <span>Loading, please wait!</span>
+        </div>
+    </div>
+    <br/>
+    
+</div>
+
+<div id="result-div" *ngIf="!showForm">
+    <h5>File successfully uploaded!</h5>
+    <br/>
+    <input type="submit" 
+        id="new-insert-product"
+        class="btn btn-primary"
+        value="Click here to upload another AML product file" 
+        (click)="newInsert()"/>
+    <br/>
+    <input *ngIf="showGoToProductList" 
+        type="button" 
+        class="btn btn-primary"
+        value="Click here to go to products list" 
+        (click)="goToProductsList()"/>
+    <br/>
+    <!-- a (click)="goToSystemOverview()">Go to System Overview</a -->
+</div>

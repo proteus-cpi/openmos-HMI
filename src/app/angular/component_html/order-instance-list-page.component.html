@@ -1,0 +1,74 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <breadcrumbs
+                [callerType]="'subSystems'"
+                [callerId]="'subsystem'">
+            </breadcrumbs>
+            <div id="order-instance-list-page-block">
+                <!-- order-instance-list
+                    [callerType]="callerType"
+                    [callerId]="callerId">
+                </order-instance-list -->
+                <div *ngIf="orderInstances">
+                    <div *ngIf="orderInstances.length == 0">
+                        No order instances found.
+                    </div>                        
+                    <div *ngIf="orderInstances.length == 1">
+                        Found 1 order instance.
+                    </div>                        
+                    <div *ngIf="orderInstances.length > 1">
+                        Found {{orderInstances.length}} order instances.
+                    </div>                        
+                
+                    <div class="table-responsive">
+                        <table *ngIf="orderInstances && orderInstances.length > 0"
+                            class="table table-hover rable-striped">
+                            <thead>
+                                <tr>
+                                    <th>ORDER INSTANCE NAME</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>PRIORITY</th>
+                                    <th>DATE</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let orderInstance of orderInstances; let i = index">
+                                    <td>{{orderInstance.name}}</td>
+                                    <td>{{orderInstance.description}}</td>
+                                    <td>
+                                        <!-- {{orderInstance.priority}} -->
+                                        <span *ngIf="orderInstance.priority === 1">
+                                                NORMAL
+                                        </span>                                        
+                                    <span *ngIf="orderInstance.priority === 2">
+                                                RUSH
+                                        </span>                                        
+                                    </td>
+                                <td>
+                                    {{orderInstance.registered | date: 'yyyy-MM-dd HH:mm:ss'}}
+                                </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"
+                                            (click)="goToOrderInstanceView(orderInstance)">
+                                            Detail
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                </div>
+                
+                <ng-template #noData>No order instances found.</ng-template>                
+            </div>
+        </div>
+    </div>
+</div>   
+<bottom-footer 
+[whereAmIContext]="'orderInstances'" 
+[whereAmISubContext]="" 
+[whereAmIElement]="">
+</bottom-footer>

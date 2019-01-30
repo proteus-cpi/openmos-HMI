@@ -1,0 +1,56 @@
+<div *ngIf="recipesPerProductInstance; else noData" id="recipes-per-product-instance-container">
+    <breadcrumbs [callerType]="callerType" 
+        [callerId]="callerId">
+    </breadcrumbs>
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Recipes executed for product instance {{productInstanceId}}</h2>
+                <div *ngIf="recipesPerProductInstance; else noData">
+                    <div *ngIf="recipesPerProductInstance.length == 0">
+                        No recipes found.
+                    </div>                        
+                    <div *ngIf="recipesPerProductInstance.length == 1">
+                        Found 1 recipe.
+                    </div>                        
+                    <div *ngIf="recipesPerProductInstance.length > 1">
+                        Found {{recipesPerProductInstance.length}} recipes.
+                    </div>                        
+                    <table class="table table-hover table-striped"
+                        *ngIf="recipesPerProductInstance && recipesPerProductInstance.length > 0">
+                        <thead>
+                            <tr>
+                                <th>RECIPE ID</th>
+                                <th>RECIPE NAME</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let recipePerProductInstance of recipesPerProductInstance">
+                                <td>{{recipePerProductInstance.uniqueId}}</td>
+                                <td>{{recipePerProductInstance.name}}</td>
+                                <td>
+ <!--                                       (click)="goToKpisForProductAndRecipe(productInstanceId, recipePerProductInstance.uniqueId)"> -->
+                                        <button class="btn btn-primary"
+                                           (click)="goToKpisForProductAndRecipe(productInstanceId, recipePerProductInstance.uniqueId, recipePerProductInstance.name)">
+                                            Execution KPIs
+                                        </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary"
+                                        (click)="goToRecipeDetail(recipePerProductInstance)">
+                                        Recipe detail
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <ng-template #noData>No recipes found.</ng-template>
+    

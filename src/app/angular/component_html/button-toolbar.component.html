@@ -1,0 +1,138 @@
+<nav class="side-menu highlight" id="side-menu">
+    <ul>
+        <ng-template [ngIf]="whereAmIContext == 'products'">
+            <li>
+                <button (click)="gotoSubSystemsList()">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    <span class="nav-text">SubSystems list</span>
+                </button>
+            </li>
+        </ng-template>
+
+        <ng-template [ngIf]="whereAmIContext == 'orderInstances'">
+            <li>
+                <button (click)="gotoSubSystemsList()">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    <span class="nav-text">SubSystems list</span>
+                </button>
+            </li>
+        </ng-template>
+
+        <ng-template [ngIf]="whereAmIContext == 'subSystems'">
+            <li>
+                <button (click)="gotoProductsList()">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    <span class="nav-text">Products list</span>
+                </button>
+            </li>
+            <!--
+        <li>
+                <button (click)="addNewProduct()">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    <span class="nav-text">Add new product file</span>
+                </button>
+            </li>
+-->
+            <li>
+                <button (click)="gotoOrderInstancesList()">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    <span class="nav-text">Order instances list</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="addNewOrder()">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    <span class="nav-text">Insert new product order</span>
+                </button>
+            </li>
+        </ng-template>
+
+        <!-- ng-template [ngIf]="whereAmIContext == 'subSystems' || whereAmIContext == 'subSystem' || whereAmIContext == 'module'" -->
+        <ng-template [ngIf]="whereAmIContext == 'subSystems'">
+            <li>
+                <button (click)="systemObservationsList()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span class="nav-text">System observations list</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="systemAssessmentsList()">
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                    <span class="nav-text">System assessments list</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="startObservationAddition()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span class="nav-text">Add system observation</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="startSystemAssessment()">
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                    <span class="nav-text">Add system assessment</span>
+                </button>
+            </li>
+        </ng-template>
+
+
+        <ng-template [ngIf]="whereAmIContext == 'subSystem' || whereAmIContext == 'module'">
+            <li>
+                <button (click)="equipmentObservationsList()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span class="nav-text">Equipment observations list</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="equipmentAssessmentsList()">
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                    <span class="nav-text">Equipment assessments list</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="equipmentAdjustmentsList()">
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                    <span class="nav-text">Equipment adjustments list</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="startObservationAddition()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span class="nav-text">Add equipment observation</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="startSystemAssessment()">
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                    <span class="nav-text">Add equipment assessment</span>
+                </button>
+            </li>
+            <li>
+                <button (click)="goToInactiveRecipe()">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    <span class="nav-text">Non-active recipes</span>
+                </button>
+            </li>
+        </ng-template>
+
+<!-- 
+    VaG - 07/11/2018 
+    Process assessments also for skills.
+-->        
+<!-- ng-template [ngIf]="whereAmIContext == 'skillRecipeView'" -->
+<ng-template [ngIf]="whereAmIContext == 'skillRecipeView' || whereAmIContext == 'skillDetail'">
+    <li>
+        <button (click)="processAssessmentsList()">
+            <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+            <span class="nav-text">Process assessments list</span>
+        </button>
+    </li>
+    <li>
+        <button (click)="startProcessAssessment()">
+            <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+            <span class="nav-text">Add process assessment</span>
+        </button>
+    </li>
+</ng-template>    
+    </ul>
+</nav>

@@ -1,0 +1,157 @@
+<div *ngIf="showInsertForm">
+    <div *ngIf="callerType != 'subSystems'">
+        <h3>New equipment observation</h3>
+    </div>
+    <div *ngIf="callerType == 'subSystems'">
+        <h3>New system observation</h3>
+    </div>
+<!-- h3>New equipment observation</h3 -->
+
+    <div>
+        <span>
+            Observation for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}
+        </span>
+    </div>
+    <br/>
+
+    <div class="row new-observation-row">
+        <div class="col-sm-12">
+            <div class="col-sm-3" style="padding: 0px;">
+                <ul class="nav nav-pills nav-stacked" role="tablist">
+                    <li *ngFor="let mainType of observationType; let i = index"
+                        role="presentation"
+                        class=""
+                        [ngClass]="{'active': i == 0}">
+                        <a href="#observation{{i}}" 
+                            aria-controls="observation{{i}" 
+                            role="tab" 
+                            data-toggle="tab"
+                            style="border-radius:20px 0px 0px 20px;"
+                            onclick="checkObservationTab(this)">
+                            {{mainType}}
+                        </a>
+                    </li> 
+                </ul>
+            </div>
+            <div class="col-sm-9 new-observation-main">
+                <div class="tab-content">
+                    <div *ngFor="let main of observationType; let i = index"
+                        id="observation{{i}}"
+                        role="tabpanel"
+                        class="tab-pane "
+                        [ngClass]="{'in active': i == 0}">
+                        <h4>Insert new observation of type {{main}}</h4>
+
+                        <div class="observation-new-row col-sm-12">
+                            <div class="col-sm-3">
+                                <label>SubType: </label>
+                                <select *ngIf="main" [(ngModel)]="subTypeToInsert"
+                                    class="form-control" (change)="subTypeSelected($event.target.value, main)">
+                                    <option *ngFor="let subType of subTypeMap.get(main)"
+                                        [ngValue]="subType.name" [value]="subType.name">
+                                        {{subType.name}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label>Value: </label>
+                                <input class="form-control" 
+                                    type="number" [(ngModel)]="valueToInsert"
+                                    min="0"/>
+                            </div>
+                            
+                            <div class="col-sm-3">
+                                <label>Unit: </label>
+                                <!--<input class="form-control" 
+                                    type="text" [(ngModel)]="unitToInsert"/> -->
+                                <select [(ngModel)]="unitToInsert"
+                                    class="form-control">
+                                    <option *ngFor="let unitType of unitTypes"
+                                        [selected]="unitType == unitToInsert"
+                                        [value]="unitType" >
+                                        {{unitType}}
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-sm-3 insert-row-div">
+                                <button class="btn btn-primary"
+                                onclick="checkObservationInput(this)"
+                                (click)="insertNewRow(i)"
+                                >Confirm</button>
+                                <!--  -->
+                                <span class="label label-danger"
+                                    style="display: none;">
+                                    Please fill all the fields
+                                </span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="col-sm-12 new-observation-table">
+                            <table class="table table-bordered table-condensed table-hover table-striped"
+                                *ngIf="rowsMap.get(main).length > 0">                             
+                                <thead>
+                                    <th>SubType</th>
+                                    <th>Value</th>
+                                    <th>Unit</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let obsRow of rowsMap.get(main)">
+                                        <td>{{obsRow.subtype}}</td>
+                                        <td>{{obsRow.value}}</td>
+                                        <td>{{obsRow.unit}}</td>
+                                        <td>
+                                            <a (click)="removeRow(obsRow)">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+
+            <div class="col-sm-12 new-observation-comments">
+                <label>Observation user's comments </label>
+                <br/>
+                <textarea [(ngModel)]="observation.userText"
+                    class="form-control"></textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-12 insert-observation-button">
+        <accept-condition></accept-condition>
+        <div class="confirm-div-button"
+            id="confirm-div"
+            title="Accept Conditions"
+            data-toggle="tooltip">
+            <button disabled
+                class="btn btn-success"
+                button-type="confirm"
+                (click)="insertObservation()">
+                Insert observation
+            </button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!showInsertForm">
+    <h3>
+        Observation inserted correctly!
+    </h3>
+    <div>
+        <a (click)="startNewInsert()">Insert another observation</a>
+        <br/>
+        <!-- <a>Go to observation list</a> -->
+        <a href="/">Go back to system overview</a>
+        <br/>
+        <a (click)="gotoList()">Go to observations list</a>
+        <br/>
+    </div>
+</div>

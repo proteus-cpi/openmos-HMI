@@ -1,0 +1,77 @@
+@media (min-width: 992px) and (max-width:1023px) {
+    .main-console ul li{
+        width:300px;
+        background:orange;
+    }
+    
+}
+
+/* #### .SM #### */
+@media (min-width: 768px) and (max-width: 991px) {
+    .main-console ul li{
+        width:200px;
+        background:yellow;
+    }
+
+    /*.table-execution th.test,
+    .table-execution td.test {
+        /* display: none;
+        display: table-cell;
+    }*/
+    
+}
+
+@media (pointer:coarse) {
+    .table-execution th.test,
+    .table-execution td.test {
+        display: table-cell;
+    }
+
+    .execution-table-info {
+        position: absolute;
+        right: 17px;
+        display: table-cell; 
+    }
+
+    .execution-table-info a {
+        display: inline-block;
+        font-size: 15px;
+    }
+
+    #resize-recipe-button {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /*.table-execution th.test,
+    .table-execution td.test {
+        display: table-cell;
+    }*/
+    
+    .detail-div {
+        display: inherit;
+        width: 70px;
+    }
+   
+    .data-rel-cont #hover-content{
+        right: 20px;
+    }
+
+    .next-recipe-td span{
+        min-width: 180px;
+        display: inline-block;
+    }
+
+    .table-execution td>select{
+        min-width: 200px;
+    }
+
+    .btn-block {
+        font-size: 14px;
+    }
+    
+    #recipe-detail-container div.table-responsive>table td {
+       min-width: 200px;
+    }
+}

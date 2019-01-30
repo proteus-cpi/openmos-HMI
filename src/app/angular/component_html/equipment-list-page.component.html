@@ -1,0 +1,18 @@
+<top-header></top-header>
+<left-menu></left-menu>
+<breadcrumbs
+    [callerType]="callerType"
+    [callerId]="callerId"
+></breadcrumbs>
+<div id="equipment-list-page-block">
+        <equipment-list
+            [callerType]="callerType"
+            [callerId]="callerId">
+        </equipment-list>
+</div>
+<button-toolbar
+            [whereAmIContext]="callerType" 
+            [whereAmISubContext]="'equipments'" 
+            [whereAmIElement]="callerId"
+></button-toolbar>
+<bottom-footer></bottom-footer>

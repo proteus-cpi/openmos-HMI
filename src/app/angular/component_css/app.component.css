@@ -1,0 +1,14 @@
+ul .dropdown-menu{
+    position: fixed;
+    display: block;
+    left: 54px;
+    top: 191px;
+    margin-top: -54px;
+    background: red;
+}
+
+.openmosLink {
+     cursor:pointer;
+     color:blue;
+     text-decoration:underline;
+}

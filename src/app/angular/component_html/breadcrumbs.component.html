@@ -1,0 +1,78 @@
+<div class="breadcrumbs-pag" id="breadcrumbs-div">
+    
+        <ol class="breadcrumb">
+    <!--<span class="glyphicon glyphicon-arrow-left" (click)="goBackBack()">Back one page</span>-->
+    <a class="glyphicon glyphicon-arrow-left" 
+        (click)="goBackBack()"
+        data-toggle="tooltip"  
+        title="Back one page"
+        data-placement="bottom">
+    </a>
+    &nbsp;
+
+    <ng-template [ngIf]="callerType == 'subSystems'">
+        <!--    
+            <a href="/subSystems#{{callerId}}">Up one level</a>
+            &nbsp; 
+        -->
+        <!--<button (click)="gotoUrl('subSystems', callerId)">Up one level</button>-->
+        <a class="glyphicon glyphicon-level-up" 
+            (click)="gotoUrl('subSystems', callerId)" 
+            title="Up one level"
+            data-toggle="tooltip"
+            data-placement="bottom">
+        </a>
+        &nbsp;
+        <li><a href="/subSystems">System Overview</a></li>
+    </ng-template>    
+
+    <ng-template [ngIf]="callerType == 'subSystem' || callerType == 'module' || callerType == 'skill' 
+        || callerType == 'executionTable' || callerType == 'skillRecipeView' ">
+        <!-- 
+            span *ngFor="let elem of this.elems">
+                <a href="{{elem.path}}">Up one level</a>
+            </span> 
+            &nbsp;
+        -->
+        <li><a href="/subSystems">System Overview</a><!-- - <a href="/subSystem/{{callerId}}">{{callerId}}</a> --></li>
+        <li *ngFor="let elem of this.elems; let i = index" 
+            [ngClass]="{'active': i == this.elems.length -1 }">
+            <!-- - <a href="{{elem.path}}">{{elem.name}}</a> 
+            *ngIf="i !== this.elems.length -1">-->
+            <a href="{{elem.path}}"
+                *ngIf="i != this.elems.length - 1">
+                {{elem.name}}
+            </a>
+            <span *ngIf="i == this.elems.length - 1">
+                {{elem.name}}
+            </span>
+            <!--{{i === this.elems.length -1 ? elem.name : ''}}-->
+        </li>
+    </ng-template>
+    
+    <ng-template [ngIf]="callerType == 'products' || callerType == 'productDetail' || callerType == 'product'" >
+        <li><a href="/products">Products List</a></li>
+    </ng-template>    
+    
+    <ng-template [ngIf]="callerType == 'orderInstances' || callerType == 'orderInstanceDetail' || callerType == 'orderInstance'" >
+            <li><a href="/orderInstances">Order instances List</a></li>
+    </ng-template>    
+
+        <!--    
+        <ng-template [ngIf]="callerType == 'module'">
+            <a href="/subSystems">System Overview</a>
+            <span *ngFor="let elem of this.elems">
+                - <a href="{{elem.path}}">{{elem.name}}</a>
+            </span>         
+        </ng-template>   
+    
+        <ng-template [ngIf]="callerType == 'skill'">
+            <a href="/subSystems">System Overview</a>
+            <span *ngFor="let elem of this.elems">
+                - <a href="{{elem.path}}">{{elem.name}}</a>
+            </span>         
+        </ng-template> 
+    -->
+</ol>
+</div>
+

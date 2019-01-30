@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <!--
+            <breadcrumbs
+                [callerType]="'subSystems'"
+                [callerId]="'subsystem'">
+            </breadcrumbs>-->
+            <div id="triggered-skills-list-page-block">
+                <!-- order-instance-list
+                    [callerType]="callerType"
+                    [callerId]="callerId">
+                </order-instance-list -->
+                <div *ngIf="triggeredSkills">
+                    <div *ngIf="triggeredSkills.length == 0">
+                        Skill never triggered.
+                    </div>                        
+                    <div *ngIf="triggeredSkills.length == 1">
+                        Found 1 skill-triggered operation.
+                    </div>                        
+                    <div *ngIf="triggeredSkills.length > 1">
+                        Found {{triggeredSkills.length}} skill-triggered operations.
+                    </div>                        
+                
+                    <div class="table-responsive">
+                        <table *ngIf="triggeredSkills && triggeredSkills.length > 0"
+                            class="table table-hover rable-striped">
+                            <thead>
+                                <tr>
+                                    <th>USER</th>
+                                    <th>DATE</th>
+                                    <th>SUCCESS</th>
+                                    <th></th>
+                                    <!--th></th-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let triggeredSkill of triggeredSkills; let i = index">
+                                    <td>{{triggeredSkill.userName}}</td>
+                                    <td>{{triggeredSkill.registered | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td>{{triggeredSkill.successfully}}</td>
+                                    <td>
+                                        <button 
+                                            *ngIf=" triggeredSkill.successfully"
+                                            class="btn btn-primary btn-sm"
+                                            (click)="goToTriggerSkillView(triggeredSkill)">
+                                            Execution KPIs
+                                        </button>
+                                    </td>
+                                    <!--td>
+                                        <button class="btn btn-primary btn-sm"
+                                            (click)="goTotriggeredSkillView(triggeredSkill)">
+                                            Detail
+                                        </button>
+                                    </td-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                </div>
+                
+                <ng-template #noData>No skill-triggered operations found.</ng-template>                
+            </div>
+        </div>
+    </div>
+</div>   
+<!--
+<bottom-footer 
+[whereAmIContext]="'triggeredSkills'" 
+[whereAmISubContext]="" 
+[whereAmIElement]="">
+</bottom-footer>-->

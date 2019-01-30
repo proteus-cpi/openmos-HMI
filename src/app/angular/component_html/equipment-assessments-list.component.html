@@ -1,0 +1,101 @@
+<breadcrumbs
+[callerType]="openmosContext"
+[callerId]="openmosTarget"
+></breadcrumbs>
+
+<div *ngIf="equipmentAssessments; else noData">
+    <h3>Equipment assessments list</h3>
+    <div *ngIf="equipmentAssessments.length == 0">
+        No equipment assessments found
+    </div>                        
+    <div *ngIf="equipmentAssessments.length == 1">
+        Found 1 equipment assessment
+    </div>                        
+    <div *ngIf="equipmentAssessments.length > 1">
+        Found {{equipmentAssessments.length}} equipment assessments
+    </div>  
+    <div class="table-responsive">
+        <table *ngIf="equipmentAssessments.length > 0" 
+            class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <!-- <th>SKILL ID</th> -->
+                    <th>EQUIPMENT ASSESSMENT</th>
+                    <th></th>
+                    <!-- th></th>
+                    <th></th -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let assessment of equipmentAssessments; let i = index">
+                    <!-- <td>{{skill.uniqueId}}</td> -->
+                    <td *ngIf="assessment.equipmentType=='subSystems'" width="50%">
+                        <label>Assessment </label> created by {{assessment.userName}} on {{assessment.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for the entire system</b>
+                        <br/>
+                        <label>User's comments: </label>
+                        {{assessment.userText}}
+                        <br/>
+                        System was in {{assessment.systemStage}} stage.
+                    </td>
+                    <td *ngIf="assessment.equipmentType=='subSystem'" width="50%">
+                        <label>Assessment </label> created by {{assessment.userName}} on {{assessment.registered | date: 'yyyy-MM-dd HH:mm:ss'}} <b>for {{assessment.equipmentType}} {{assessment.equipmentName}}</b>
+                        <br/>
+                        <label>User's comments: </label>
+                        {{assessment.userText}}
+                        <br/>
+                        System was in {{assessment.systemStage}} stage.
+                    </td>
+                    <!-- td>{{equipmentAssessment.name}}</td -->
+                    <td width="50%">
+                <!-- button class="btn btn-primary btn-sm"
+                            (click)="goToSkillDetails(equipmentAssessment)">
+                            equipmentAssessment details
+                        </button-- >
+<!-- *ngIf="assessment" 
+class="row new-assessment-row"
+-->
+                        <div  >
+                            <div class="col-sm-12">
+                                <span class="main-type-label-row">
+                                    <label>Main Type</label>
+                                </span>
+                                <span class="rating-label-row">
+                                    <label>Rating</label>
+                                </span>
+                            </div>
+                            <div class="col-sm-12" 
+                                *ngFor="let row of assessment.rows"
+                                class="rating-row">
+                                <span class="assessment-type-label">
+                                    {{row.earType}}
+                                </span>
+                                
+                                <span class="assessment-rating-input">
+                                    <input disabled="true" type="range" [(ngModel)]="row.rating" class="assessment-rating" />
+                                </span>
+                                
+                                <span class="assessment-rating-value">
+                                    {{row.rating}}
+                                </span>                   
+                            </div>
+                            <!-- div class="col-sm-12 new-assessment-comments">
+                                <label>Equipment assessment user's comments </label>
+                                <br/>
+                                {{assessment.userText}}
+                                <br/>
+                                Assessment created by <b>{{assessment.userName}}</b> on <b>{{assessment.registered | date: 'yyyy-MM-dd HH:mm:ss'}}</b>. System was in {{assessment.systemStage}} stage.
+                            </div -->                
+                </div>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="buttons" *ngIf="openmosTarget != 'all' ">
+            <button class="btn btn-primary" (click)="startAssessmentAddition()">
+                Add assessment
+            </button>
+        </div>    
+    </div>
+    </div>
+
+<ng-template #noData>No equipment assessments found<!-- for {{callerTypeToBePrinted}} {{callerIdToBePrinted}}--></ng-template>

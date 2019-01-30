@@ -1,0 +1,75 @@
+<div id="module-list-comp">
+    <div *ngIf="modules; else noData" class="box-overview-cont">
+            <div *ngIf="modules.length == 0 && subSystemNameToPrint">
+                No modules found into {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+            </div>                        
+            <div *ngIf="modules.length == 1 && subSystemNameToPrint">
+                Found 1 module into {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+            </div>                        
+            <div *ngIf="modules.length > 1 && subSystemNameToPrint">
+                Found {{modules.length}} modules into {{callerTypeToBePrinted}} {{subSystemNameToPrint}}
+            </div>                        
+
+        <div class="box-overview" *ngFor="let module of modules; let i = index" id="overview-div">
+            <!-- <label (click)="goToSubSystemDetail(subSystem)" class="openmosLink"> 
+                     {{subSystem.uniqueId}}    
+            -->
+            <!-- label (click)="goToModuleDetail(module)" class="openmosLink">{{module.name}}</label -->  
+            <a *ngIf="module.internalModule"
+                class="glyphicon glyphicon-share-alt open-new-tab" 
+                href="{{getModuleDetailUrl(module)}}"
+                target="_blank">
+            </a>
+            <object-pretty-printer
+                *ngIf="module.uniqueId"
+                [objectToPrint]="module"
+                [objectIdentifier]="module.uniqueId">
+            </object-pretty-printer>
+
+            <!-- span id="hover-content"
+                class="glyphicon glyphicon-info-sign"
+                (click)="showModuleDetail(module)"
+                data-toggle="modal" data-target="#myModal">
+            </span -->
+            <button (click)="goToModuleDetail(module)">
+                <b>{{module.name}}</b>
+            </button>
+            <!-- disabled="module.internalModules.length == 0" -->
+            
+            <!-- button (click)="goToModuleList(module)">Modules</button -->   
+            <button *ngIf="module && module.skills != undefined && module.skills != null &&  module.skills.length > 0"
+             (click)="goToSkillList(module)">
+                Skills
+            </button> 
+            <!-- *ngIf="module.skill != null && module.skills.length == 0" -->           
+            <button *ngIf="module && module.recipes != undefined &&  module.recipes != null &&  module.recipes.length > 0"
+                (click)="goToRecipeList(module)">
+                Recipes
+            </button>
+            <!-- *ngIf="module.skill != null && module.skills.length == 0" -->    
+        </div>
+    </div>  
+</div>
+
+<!-- div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 *ngIf="selectedModule" class="modal-title" id="exampleModalLabel">
+            Module: {{selectedModule.name}}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <pre>{{prettyModuleJson}}</pre>
+        </div>
+        <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div -->
+
+<ng-template #noData>No modules found<!-- into {{callerTypeToBePrinted}} {{callerIdToBePrinted}}--></ng-template>
